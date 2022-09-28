@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/0cfdca5d54.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static '/css/parent.css' %}">
+    {% block newcss %}{% endblock %}
+  </head>
+  <body>
+      
+      <!--navigation bar-->
+      <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+          <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'homepage'%}">Fashion</a>
+          <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menus">
+             <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="menus">
+              <ul class="navbar-nav me-auto navigation">
+                 <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'womenpage'%}">Women</a>
+                  </li>
+                 <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'menpage'%}">Men</a>
+                  </li>
+                 <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'kidspage'%}">Kids</a>
+                 </li>
+                 <li class="nav-item">
+                    <a class="nav-link text-white" href="">All Brands</a>
+                 </li>
+              </ul>
+          </div>
+          <a class="text-white userlogin pe-4" href=""><i class="fa-solid fa-user"></i></a>
+          <a class="text-white cart" href=""><i class="fa-solid fa-cart-shopping"></i></a>
+          </div>
+      </nav> 
+
+      {% block categories %}
+      {% endblock %} 
+
+      <div class="contactbottom">
+        <div class="contact d-flex justify-content-evenly py-4">
+            <div class="help">
+                <h6>HELP</h6>
+                <p>About Us</p>
+                <p>Shipping & Return Policy</p>
+                <p>Help Center</p>
+                <p>Terms & Conditions</p>
+                <p>Privacy Policy</p>
+                <p>Responsible Disclosure</p>
+            </div>
+            <div class="mail">
+                 <h6>Mail Us:</h6>
+                 <address>
+                  Fashion Internet (Pvt)Ltd<br>
+                  Buildings Alyssa, Begonia<br>
+                  Clove Embassy Tech Village,<br>
+                  Outer Ring Road,<br>
+                  Bengaluru, 560103,<br>             
+                  Karnataka, India</address>
+            </div>
+            <div class="socialmedia">
+                 <h6>FOLLOW US</h6>
+                 <a href="#" class="text-white"><i class="fa-brands fa-instagram"></i></a>
+                 <a href="#" class="text-white"><i class="fa-brands fa-facebook"></i></a>
+                 <a href="#" class="text-white"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+         </div>
+         <div class="text-center copyright">© 2019 - 2022 Fashion Pvt.Ltd. All Rights Reserved</div>
+      </div>
+      
+      
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+      <script src="{% static 'js/interactions.js' %}"></script>
+  </body>
+</html>

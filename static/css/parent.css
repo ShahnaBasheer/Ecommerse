@@ -1,0 +1,70 @@
+/* navbar and homeimage*/
+*{
+  box-sizing: border-box;
+  
+}
+.navbar{
+  padding:0px;
+}
+.navbar-expand-md .navbar-nav .nav-link{
+  padding:.5rem 1.5rem;  
+}
+.navbar-expand-sm .navbar-nav .nav-link:hover{
+  background-color:white;
+  color:black !important;
+}
+.navbar-toggler:focus{
+  box-shadow:0 0 0  0.1rem;
+}
+.navbar-toggler{
+  font-size:1rem;
+  border:none;
+  margin-left:-12px;
+}
+.category{
+background-color: rgb(214, 237, 241);  
+}
+footer{
+  display:none;
+  font-size: 16px;
+}
+
+@media(max-width:767px){
+  .navbar .container{
+    justify-content: space-between;
+  }
+  .navbar-brand{order:2;}
+  .cart{order:3;}
+  .navbar .navbar-collapse{order:4;}
+  .userlogin{display:none;} 
+  .copyright{
+     margin-bottom: 47px;
+  }
+   footer{
+    display:block;
+  }
+}
+.homeimg{
+  width:100%;
+}
+.contactbottom{
+  background-color: rgba(0, 0, 0, 0.714);
+}
+.copyright{
+  background-color: rgb(200, 81, 87);
+  font-size: 14px;
+  padding:10px 0px;
+  color: white;
+}
+
+/* homepage.html */
+
+.contact{
+   color:white;
+}
+.contact h6{
+  margin-bottom: 28px;
+}
+.contact p,.mail address{
+  font-size: 14.5px;
+}

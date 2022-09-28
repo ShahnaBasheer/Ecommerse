@@ -1,0 +1,77 @@
+.ruler{
+  position: relative;
+  border-bottom:1px solid black;
+  z-index: 1;
+  margin-top:100px;  
+}
+.ruler h3,.cover{
+  text-align:center;
+  z-index: 3;
+  position: absolute;
+  background-color: white;
+}
+.ruler h3{
+  top:-1.3rem;
+  left:2rem;
+  padding:0px 20px;
+}
+.ruler .cover{
+  right:6rem;
+  top:-0.8rem;
+  padding:0 25px; 
+  z-index: 3;
+}
+.cover h5:hover{
+  cursor:pointer
+}
+#sortby{
+  display: none;
+  line-height: 2rem;
+  position :absolute;
+  top:45px;
+  right:30px;
+  width:250px;
+  z-index:4;
+  box-shadow: 0 0 30px rgb(0 0 0 / 30%);
+  background-color: white;;
+}
+.filtbox,.agebox,.cardbox,.cardbox{ 
+  border:1px solid black;
+  max-width:250px;
+}
+.products .card-body p{
+  margin:0px;
+  font-size: 15px;
+}
+.products .row>*{
+  padding:0px 5px;
+}
+.products .card:hover{
+  box-shadow:0px 0px 12px rgb(209, 209, 209);
+  cursor: pointer;
+}
+@media (max-width:768px) {
+  .filterscontainer{
+    display:none;
+  }
+}
+
+/* ------ kids -------- */
+
+.filters input[type]{
+   width:18px;
+   accent-color:black;
+}
+.filters h6{
+  padding-bottom:10px;
+}
+.filters label{
+  font-size: 15px;
+}
+.agebox,.cardbox{
+  height:250px;
+  overflow: auto;
+}
+.filters form div {
+  padding-bottom:12px;
+} 

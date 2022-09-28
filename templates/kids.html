@@ -1,0 +1,124 @@
+{% extends 'parent.html' %}
+{% load static %}
+
+{% block newcss %}
+   <link rel="stylesheet" href="{% static 'css/products.css' %}"> 
+{% endblock %}
+
+
+{% block title %}
+Kids Fashions
+{% endblock %}
+
+{% block categories %}
+    {% include 'sortby.html' with heading="kids" %}
+   
+   <!-- Products-->
+   <div class="mx-4 my-5 womenpage">
+      <div class="row ">
+         <div class="col-md-3 filterscontainer">
+            <div class="filters">
+                <h5>Filters</h5>
+                <div class="filtbox p-2 mb-2" >
+                  <h6>Gender</h6>
+                  <form class="px-3">
+                     <div class="d-flex justify-content-between">
+                        <label for="girls">Girls</label>
+                        <input type="radio" id="girls" name="gender">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="boys">Boys</label>
+                        <input type="radio" id="boys" name="gender">
+                     </div>   
+                   </form>
+                </div> 
+                <div class="agebox p-2 mb-2">
+                  <h6>Age</h6>
+                  <form class="px-3">
+                     <div class="d-flex justify-content-between">
+                        <label for="months1">0-3 Months</label>
+                        <input type="checkbox" id="months1" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="months2">3-6 Months</label>
+                        <input type="checkbox" id="months2" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="months3">6-9 Months</label>
+                        <input type="checkbox" id="months3" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="months4">9-12 Months</label>
+                        <input type="checkbox" id="months4" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="years1">1-2 Years</label>
+                        <input type="checkbox" id="years1" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="years2">2-4 Years</label>
+                        <input type="checkbox" id="years2" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="years3">4-6 Years</label>
+                        <input type="checkbox" id="years3" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="years4">6-8 Years</label>
+                        <input type="checkbox" id="years4" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="years5">8-10 Years</label>
+                        <input type="checkbox" id="years5" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="years6">10-12 Years</label>
+                        <input type="checkbox" id="years6" name="age">
+                     </div> 
+                     <div class="d-flex justify-content-between">
+                        <label for="years7">12-14 Years</label>
+                        <input type="checkbox" id="years7" name="age">
+                     </div>  
+                     <div class="d-flex justify-content-between">
+                        <label for="years8">14-16 Years</label>
+                        <input type="checkbox" id="years8" name="age">
+                     </div>
+                     <div class="d-flex justify-content-between">
+                        <label for="years9">16+ Years</label>
+                        <input type="checkbox" id="years9" name="age">
+                     </div>
+                   </form>
+                 </div> 
+                 <div class="cardbox p-2 mb-2">
+                    <h6>Category</h6> 
+  
+                    {% for d in allproducts %}
+                    <form class="px-3">
+                       <div class="d-flex justify-content-between">
+                          <label for="prod{{forloop.counter}}">{{d.women}}</label>
+                          <input type="checkbox" id="prod{{forloop.counter}}" name="age">
+                       </div>
+                    </form>
+                    {% endfor %}
+                 </div>
+            </div>
+         </div>    
+         <!-- All products images-->
+
+         <div class="col-md-9 products">
+            <div class="row">
+               <div class="col-6 col-md-4">
+                  <div class="card">
+                     <img src="../static/images/gkids1.jpg" class="card-img-top img-fluid" alt="images">
+                     <div class="card-body">
+                        <p><strong>Luyk</strong></p>
+                        <p class="text-secondary">Blue Floral Shrug Co-Ord For Girls</p>
+                        <p>₹1000</p>
+                     </div>
+                  </div> 
+               </div>
+            </div>   
+         </div>
+      </div>
+   </div>
+{% endblock %}

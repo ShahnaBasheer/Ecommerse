@@ -1,0 +1,13 @@
+
+evirtual
+temp/
+*.log
+__pycache__/
+*.py[cod]
+*.class
+pip-log.txt
+pip-delete-this-directory.txt
+db.sqlite3
+/media/
+*.pot
+/uploads/

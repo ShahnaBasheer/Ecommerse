@@ -1,0 +1,31 @@
+{% extends 'parent.html'%}
+{% load static %}
+
+{% block title%}Shopping New Styles{% endblock%}
+
+{% block categories %}
+    <div class="container-fluid bg-white mt-5">
+      <img src="{% static 'images/fashionremini.jpg' %}" alt="homepage_mage" class="homeimg">
+    </div>
+    
+    <div class="py-5 category">
+      <div class="row w-100 text-center">
+        <div class="col">
+           <img src="{% static 'images/home4.jpg'%}" class="rounded-circle img-fluid" alt="women" width="200" height="200">
+           <p>Women</p>
+        </div>
+        <div class="col">
+          <img src="{% static 'images/home2.jpg'%}" class="rounded-circle img-fluid" alt="men" width="200" height="200">
+          <p>Men</p>
+        </div>
+        <div class="col">
+          <img src="{% static 'images/kids.jpg'%}" class="rounded-circle img-fluid" alt="kids" width="200" height="200">
+          <p>Kids</p>
+        </div> 
+      </div>  
+    </div>
+    
+    <footer class="footer fixed-bottom bg-dark text-center">
+        <a class="text-white text-decoration-none"><i class="fa-sharp fa-solid fa-user"></i><br>Account</a>
+    </footer>
+{% endblock %} 

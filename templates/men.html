@@ -1,0 +1,62 @@
+{% extends 'parent.html' %}
+{% load static %}
+
+{% block newcss %}
+   <link rel="stylesheet" href="{% static 'css/products.css' %}"> 
+{% endblock %}
+
+
+{% block title %}
+Men Fashions
+{% endblock %}
+
+{% block categories %}
+    {% include 'sortby.html' with heading="men" %}
+   
+   <!-- Products-->
+   <div class="mx-4 my-5 womenpage">
+      <div class="row ">
+         <div class="col-md-3 filterscontainer">
+            <div class="filters">
+               <h5>Filters</h5>
+               <div class="filtbox p-2 mb-2" >
+                   <h6>Category</h6> 
+
+                  <form class="px-3" id="formsubmit" method="POST" action="{% url 'm_products' %}">
+                     {% csrf_token %}
+
+                     {% for d in allproducts %}
+                     <div class="d-flex justify-content-between">
+                        <label for="prospro{{forloop.counter}}">{{d.men}}</label>
+                        <input type="checkbox" id="prospro{{forloop.counter}}"
+                           onclick="formsubmit(this.id)" name="product" value={{d.men}}>
+                     </div>
+                     {% endfor %}
+                     
+                  </form>
+               </div>            
+            </div>
+         </div>    
+         <!-- All products images-->
+
+         <div class="col-md-9 products">
+            <div class="row">
+
+               {% for x in details %}
+               <div class="col-6 col-md-4">
+                  <div class="card mb-3">
+                     <img src={{x.card_image.url}} class="card-img-top img-fluid" alt="images">
+                     <div class="card-body">
+                        <p class="text-uppercase"><strong>{{x.seller}}</strong></p>
+                        <p class="text-secondary text-capitalize">{{x.description}}</p>
+                        <p>₹{{x.price}}</p>
+                     </div>
+                  </div> 
+               </div>
+               {% endfor %}
+
+            </div>   
+         </div>
+      </div>
+   </div>
+{% endblock %}
