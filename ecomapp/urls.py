@@ -7,6 +7,6 @@ urlpatterns = [
     path('women/',views.womentab,name="womenpage"),
     path('men/',views.mentab,name="menpage"),
     path('kids/',views.kidstab,name="kidspage"),
-    path('women/category',views.womenproducts,name="w_products"),
-    path('men/category',views.menproducts,name="m_products"),
+    path('women/categories',views.filter_women,name="women_category"),
+    path('men/categories',views.filter_men,name="men_category"),
 ]

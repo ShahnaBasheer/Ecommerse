@@ -20,41 +20,22 @@ Women Fashions
             <div class="filters">
                <h5>Filters</h5>
                <div class="filtbox p-2 mb-2" >
-                   <h6>Category</h6> 
-                   <form class="px-3" id="formsubmit" method="POST" action="{% url 'w_products' %}">
-                      {% csrf_token %}
-
+                   <h6>Category</h6>
+                     <div class="px-3">
                       {% for d in allproducts %}
-                      <div class="d-flex justify-content-between">
-                         <label for="pro{{forloop.counter}}">{{d.women}}</label>
-                         <input type="checkbox" id="pro{{forloop.counter}}" 
-                             onclick="formsubmit(this.id)" name="product" value={{d.women}}>
-                      </div>
+                        <div class="d-flex justify-content-between pb-2">
+                            <label for="pro{{forloop.counter}}">{{d.women}}</label>
+                            <input type="checkbox" id="pro{{forloop.counter}}" data-gender="women"
+                               data-filter="category" class="filter-checkbox" value={{d.women}}>      
+                        </div>
                       {% endfor %}
-
-                   </form>  
+                     </div>  
                </div>
             </div>
          </div>    
          <!-- All products images-->
-
          <div class="col-md-9 products">
-               <div class="row">
-
-                  {% for x in details %}
-                  <div class="col-6 col-md-4">
-                     <div class="card mb-3">
-                        <img src={{x.card_image.url}} class="card-img-top img-fluid" alt="images">
-                        <div class="card-body">
-                           <p class="text-uppercase"><strong>{{x.seller}}</strong></p>
-                           <p class="text-secondary text-capitalize">{{x.description}}</p>
-                           <p>₹{{x.price}}</p>
-                        </div>
-                     </div> 
-                  </div>
-                  {% endfor %}
-
-               </div>     
+           {% include 'cards.html' %} 
          </div>
       </div>
    </div>
