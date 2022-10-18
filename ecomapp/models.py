@@ -1,3 +1,4 @@
+from unittest.util import _MAX_LENGTH
 from django.db import models
 
 # Create your models here.
@@ -5,28 +6,33 @@ from django.db import models
 
 class WomenCategory(models.Model):
    women = models.CharField(max_length=50,unique=True)
-
    def __str__(self):
       return self.women
 
 class MenCategory(models.Model):
    men = models.CharField(max_length=50,unique=True)
-
    def __str__(self):
       return self.men
 
 class GirlsCategory(models.Model):
-   girls = models.CharField(max_length=50,unique=True)
-
+   kids = models.CharField(max_length=50,unique=True)
    def __str__(self):
-      return self.girls
+      return self.kids
 
 class BoysCategory(models.Model):
-   boys = models.CharField(max_length=50,unique=True)
-   
+   kids = models.CharField(max_length=50,unique=True) 
    def __str__(self):
-      return self.boys
+      return self.kids
 
+class Size(models.Model):
+   size = models.CharField(max_length=50,null=True)
+   def __str__(self):
+      return self.size
+         
+class KidsAge(models.Model):
+   age = models.CharField(max_length=50,unique=True,null=True)
+   def __str__(self):
+      return self.age
 
 def user_directory_path(instance,filename):  
     if isinstance(instance,WomenFashion):
@@ -45,11 +51,11 @@ def user_directory_path(instance,filename):
 
 class iambase(models.Model):
   seller = models.CharField(max_length=50)
-  description = models.CharField(max_length=100)
+  description = models.CharField(max_length=60)
   price = models.IntegerField()
   card_image = models.ImageField(upload_to=user_directory_path) 
   upload_date = models.DateTimeField(auto_now=True)
-  
+  size = models.ManyToManyField(Size)
   class Meta:
     abstract = True
 
@@ -61,9 +67,10 @@ class MenFashion(iambase):
 
 class GirlsFashion(iambase):
     category = models.ForeignKey(GirlsCategory, on_delete=models.CASCADE)
+    age = models.ManyToManyField(KidsAge)
 
 class BoysFashion(iambase):
     category = models.ForeignKey(BoysCategory, on_delete=models.CASCADE)
-
-
+    age = models.ManyToManyField(KidsAge)
+    
 

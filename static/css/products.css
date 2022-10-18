@@ -35,9 +35,8 @@
   box-shadow: 0 0 30px rgb(0 0 0 / 30%);
   background-color: white;;
 }
-.filtbox,.agebox,.cardbox,.cardbox{ 
-  border:1px solid black;
-  max-width:250px;
+.products .card{
+  height:500px;
 }
 .products .card-body p{
   margin:0px;
@@ -58,6 +57,12 @@
 
 /* ------ kids -------- */
 
+.filtbox{ 
+  border:1px solid black;
+  max-width:250px;
+  max-height:270px;
+  overflow: auto;
+}
 .filters input[type]{
    width:18px;
    accent-color:black;
@@ -67,10 +72,6 @@
 }
 .filters label{
   font-size: 15px;
-}
-.agebox,.cardbox{
-  height:250px;
-  overflow: auto;
 }
 .filters form div {
   padding-bottom:12px;

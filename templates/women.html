@@ -19,10 +19,11 @@ Women Fashions
          <div class="col-md-3 filterscontainer">
             <div class="filters">
                <h5>Filters</h5>
+               
                <div class="filtbox p-2 mb-2" >
                    <h6>Category</h6>
                      <div class="px-3">
-                      {% for d in allproducts %}
+                      {% for d in allproducts.category %}
                         <div class="d-flex justify-content-between pb-2">
                             <label for="pro{{forloop.counter}}">{{d.women}}</label>
                             <input type="checkbox" id="pro{{forloop.counter}}" data-gender="women"
@@ -31,6 +32,20 @@ Women Fashions
                       {% endfor %}
                      </div>  
                </div>
+
+               <div class="filtbox p-2 mb-2" >
+                  <h6>Size</h6>
+                    <div class="px-3">
+                     {% for d in allproducts.size %}
+                       <div class="d-flex justify-content-between pb-2">
+                           <label for="size{{forloop.counter}}">{{d.size}}</label>
+                           <input type="checkbox" id="size{{forloop.counter}}" data-gender="women"
+                              data-filter="size" class="filter-checkbox" value={{d.size}}>      
+                       </div>
+                     {% endfor %}
+                    </div>  
+              </div>
+
             </div>
          </div>    
          <!-- All products images-->

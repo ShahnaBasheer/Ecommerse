@@ -1,0 +1,12 @@
+
+<h6>Category</h6> 
+        <div class="px-3">
+            {% for d in allproducts.category %}
+            <div class="d-flex justify-content-between pb-2">
+               <label for="kidscat{{forloop.counter}}">{{d.kids}}</label>
+               <input type="checkbox" id="kidscat{{forloop.counter}}" data-filter="category" 
+                  value="{{d.kids}}" class="filter-checkbox" data-gender="kids">
+            </div>
+            {% endfor %}
+         </div>
+  
