@@ -3,7 +3,6 @@ $(document).ready(function(){
     $("#clicksort").click(function(){
        $("#sortby").toggle();
     });
-
     $(".filter-radio,.filter-checkbox").on('click', function () {   
         let _filterObj = {};
         let _filterGender = $(this).data('gender');
@@ -26,7 +25,9 @@ $(document).ready(function(){
                $(".products").html(response.details);
                $("#catbox").html(response.allcategory);
                $("#agebox").html(response.allages);
-
+               $("#sizebox").html(response.allsizes);
+               $("#offerbox").html(response.alloffers);
+               
                if(_filterGender=='girls'|| _filterGender=='boys'){
                   $(".filter-checkbox").click(function(){ 
                     keyvalue();

@@ -1,0 +1,23 @@
+*{
+  box-sizing: border-box;
+}
+body{
+  background-color: #DCDCDC;
+}
+.image-container{
+  width:100px;
+  height:150px;
+  border:1px solid black;
+}
+.pricedetails,.items{
+  box-shadow: 1px 2px 6px #585858;
+}
+.shophead{
+  color:rgb(42, 63, 205);
+}
+.pricehead{
+  color:rgb(30, 178, 178);
+}
+.hrrule{
+  color:#C0C0C0;
+}

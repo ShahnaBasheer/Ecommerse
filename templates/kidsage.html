@@ -4,7 +4,7 @@
          <div class="d-flex justify-content-between pb-2">
             <label for="age{{forloop.counter}}">{{d.age}}</label>
             <input type="checkbox" id="age{{forloop.counter}}" data-gender="kids"
-               class="filter-checkbox" data-filter="age" value="{{d.age}}">
+               data-filter="age" class="filter-checkbox" value="{{d.age}}">
          </div>
          {% endfor %}
       </div>

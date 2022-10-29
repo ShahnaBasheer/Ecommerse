@@ -1,0 +1,62 @@
+{% extends 'parent.html' %}
+{% load static %}
+
+{% block newcss %}
+   <link rel="stylesheet" href="{% static 'css/product-info.css' %}">
+   <link href="https://fonts.googleapis.com/css2?family=Exo+2&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block title %}
+products
+{% endblock %}
+
+{% block categories %}
+  <div class="mx-4 my-5 product-details">
+    <div class="row">
+      <div class="col-5 py-3 px-5">
+         <img src="{{details.card_image.url}}" alt="images" style="max-width:100%;height:auto">
+      </div>
+      <div class="col-5 py-4">
+        <div class="productinfo">
+            <h6>{{details.seller}}</h6>
+            <h5 class="fs-5 pb-3">{{details.description}}</h5>
+            <p class="price fw-bolder">₹{{details.price}} <span class="ms-3 offer fs-6">
+              {{details.discount}} Off</span></p>
+            <p class="text-secondary offerprice"><small>MRP
+              <span class="text-decoration-line-through"> ₹3999</span> 
+              Inclusive of all taxes</small></p>
+            <hr>
+            <div class="py-3"> 
+              <p class="me-4 text-decoration-underline selectsize">Select Size</p>
+              <ul id="sizes" class="list-inline-item list-unstyled">
+                 {% for z in details.size.all %}
+                   <li class=" list-inline-item mb-3">{{z.size}}</li>
+                 {% endfor %}
+              </ul>
+            </div>
+            
+            <div class="d-grid">
+              <a href="#" class="addtocart btn btn-block mb-3">ADD TO CART</a>
+              <a href="#" class="buynow btn">BUY NOW</a>
+            </div>
+
+        </div>
+        
+        <div class="productinformation my-5">
+            <h4>PRODUCT INFORMATIONS</h4>
+            <div>
+                <h5 class="py-4">Product Details</h5>
+                {% for x,y in productdetails.get_fields %}
+                <div class="row pb-3">
+                   <div class="col-5 details fw-bold">{{x}}</div>
+                   <div class="col-7">{{y}}</div>
+                </div>
+                {% endfor %}
+                <h5 class="py-4">Descriptions</h5>
+                <p>{{productdetails.Descriptions}}</p>
+            </div>       
+        </div>
+      </div> 
+   </div>  
+  </div>   
+{% endblock %} 

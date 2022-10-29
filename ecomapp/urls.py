@@ -12,4 +12,6 @@ urlpatterns = [
     path('girls/filter_data',views.filter_girls,name="girls_filter"),
     path('boys/filter_data',views.filter_boys,name="boys_filter"),
     path('kids/filter_data',views.filter_kids,name="kids_filter"),
+    path('product-info/<product_id>',views.product_info,name="product_info"),
+    path('cart/',views.cart,name="cart"),
 ]

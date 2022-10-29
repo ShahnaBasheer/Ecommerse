@@ -1,0 +1,65 @@
+{% extends 'parent.html' %}
+{% load static %}
+
+{% block newcss %}
+   <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block title %}
+   Shopping Cart
+{% endblock %}
+
+{% block categories %}
+   <div class="container-fluid mt-5 p-4"> 
+      <div class="cart">     
+         <div class="row">
+            <div class="col-8 p-0">
+               <div class="items bg-body m-1 p-3 rounded">
+                  <h4 class="text-center shophead">SHOPPING CART</h4> 
+                  <hr>
+                  <div class="row">
+                     <div class="col-3">
+                        <div class="image-container">
+                           <img src="" alt="cart image" width=100 height=150>
+                        </div>
+                     </div>
+                     <div class="col-6">
+                        <p class="fw-bold">name</p>
+                        <p>XL</p>
+                        <p>Seller:</p>
+                        <p>500</p>
+                        <a href="#" class="btn btn-danger btn-sm">Save It For Later</a> 
+                        <a href="#" class="btn btn-success btn-sm">Remove</a>
+                     </div>
+                     <div class="col-3">
+                        <div class="quantity input-group">
+                           <input type="number" min="1" class="w-25 text-center" step="1" value="1">
+                        </div>     
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-4 p-0">
+               <div class="pricedetails bg-body m-1 p-3 rounded">
+                  <h5 class="pricehead">Price Details</h5>
+                  <hr class="hrrule">
+                  <div class="row">
+                     <div class="col-8">
+                       <p>Price[2 Items]</p>
+                       <p>Discount</p>
+                       <p>Delivery Charges</p>
+                       <p><b>TOTAL AMOUNT</b></p>
+                     </div>
+                     <div class="col-4">
+                       <p>₹3000</p>
+                       <p>-5636</p>
+                       <p>FREE</p>
+                       <p><b>₹45000</b></p>
+                     </div>
+                  </div>  
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+{% endblock %}

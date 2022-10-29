@@ -1,0 +1,11 @@
+
+<h6>Size</h6>
+     <div class="px-3">
+        {% for d in allproducts.size %}
+          <div class="d-flex justify-content-between pb-2">
+              <label for="size{{forloop.counter}}">{{d.size}}</label>
+              <input type="checkbox" id="size{{forloop.counter}}" data-gender="kids"
+                 data-filter="size" class="filter-checkbox" value={{d.size}}>      
+        </div>
+      {% endfor %}
+     </div>  
