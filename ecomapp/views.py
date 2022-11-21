@@ -52,12 +52,6 @@ def registration(request):
       return redirect('signin')
     return render(request,'registration.html')
 
-def discount_range(discount_list):
-    if len(discount_list) == 1:
-      range_value = (int(discount_list[0]),99)
-    else:      
-      range_value = (min(list(map(int,discount_list))),99)
-
 def womentab(request):
     card_details = WomenFashion.objects.all()
     products = WomenCategory.objects.all()
@@ -86,13 +80,15 @@ def filter_women(request):
     pro_list = request.GET.getlist('category[]')
     size_list = request.GET.getlist('size[]')
     discount_list = request.GET.getlist('discount[]')
-    range_value = 0
     if len(pro_list) > 0:
       card_details = card_details.filter(category__women__in = pro_list).all().distinct()
     if len(size_list) > 0:
       card_details = card_details.filter(size__size__in = size_list).all().distinct()
     if len(discount_list) > 0:
-      discount_range(discount_list)
+      if len(discount_list) == 1:
+         range_value = (int(discount_list[0]),99)
+      else:      
+         range_value = (min(list(map(int,discount_list))),99)
       card_details = card_details.filter(discount__range = range_value).all().distinct().order_by('discount')
        #add __in columnname to filter list of values    
        #add getlist to take values as list      
@@ -104,13 +100,15 @@ def filter_men(request):
     pro_list = request.GET.getlist('category[]')
     size_list = request.GET.getlist('size[]')
     discount_list = request.GET.getlist('discount[]')
-    range_value = 0
     if len(pro_list) > 0:
       card_details = card_details.filter(category__men__in = pro_list).all().distinct() 
     if len(size_list) > 0:
       card_details = card_details.filter(size__size__in = size_list).all() .distinct()      
     if len(discount_list) > 0:
-      discount_range(discount_list)
+      if len(discount_list) == 1:
+         range_value = (int(discount_list[0]),99)
+      else:      
+         range_value = (min(list(map(int,discount_list))),99)
       card_details = card_details.filter(discount__range = range_value).all().distinct().order_by('discount')
     ajax = render_to_string('cards.html', {'details': card_details})
     return JsonResponse({'details': ajax})
@@ -135,7 +133,6 @@ def filter_kids(request):
     age_list = request.GET.getlist('age[]')
     size_list = request.GET.getlist('size[]')
     discount_list = request.GET.getlist('discount[]')
-    range_value = 0
     if len(pro_list) > 0:
        girls_filt = girls_filt.filter(category__girls__in = pro_list).all().distinct()
        boys_filt = boys_filt.filter(category__boys__in = pro_list).all().distinct()
@@ -149,7 +146,10 @@ def filter_kids(request):
        boys_filt = boys_filt.filter(size__size__in = size_list).all().distinct()
        card_details = girls_filt.union(boys_filt)
     if len(discount_list) > 0:
-       discount_range(discount_list)
+       if len(discount_list) == 1:
+         range_value = (int(discount_list[0]),99)
+       else:      
+         range_value = (min(list(map(int,discount_list))),99)
        girls_filt = girls_filt.filter(discount__range = range_value).all().distinct()
        boys_filt = boys_filt.filter(discount__range = range_value).all().distinct()
        card_details = girls_filt.union(boys_filt).order_by('discount')
@@ -166,7 +166,6 @@ def filter_girls(request):
     age_list = request.GET.getlist('age[]')
     size_list = request.GET.getlist('size[]')
     discount_list =request.GET.getlist('discount[]')
-    range_value = 0
     if len(pro_list) > 0:
        card_details = card_details.filter(category__girls__in = pro_list).all().distinct()
     if len(age_list) > 0:
@@ -174,8 +173,11 @@ def filter_girls(request):
     if len(size_list) > 0:
        card_details = card_details.filter(size__size__in = size_list).all().distinct()
     if len(discount_list) > 0:
-      discount_range(discount_list)
-      card_details = card_details.filter(discount__range = range_value).all().distinct()
+       if len(discount_list) == 1:
+          range_value = (int(discount_list[0]),99)
+       else:      
+          range_value = (min(list(map(int,discount_list))),99)
+       card_details = card_details.filter(discount__range = range_value).all().distinct()
     ajax = render_to_string('cards.html',{'details':card_details})
     category = render_to_string('kidscategory.html',{'allproducts':{'category':products}})
     ages = render_to_string('kidsage.html',{'allproducts':{'age':kids_age}})
@@ -193,7 +195,6 @@ def filter_boys(request):
     age_list = request.GET.getlist('age[]')
     size_list = request.GET.getlist('size[]')
     discount_list = request.GET.getlist('discount[]')
-    range_value = 0
     if len(pro_list) > 0:
        card_details = card_details.filter(category__boys__in = pro_list).all().distinct()
     if len(age_list) > 0:
@@ -201,8 +202,11 @@ def filter_boys(request):
     if len(size_list) > 0:
        card_details = card_details.filter(size__size__in = size_list).all().distinct()
     if len(discount_list) > 0:
-      discount_range(discount_list)
-      card_details = card_details.filter(discount__range = range_value).all().distinct()
+       if len(discount_list) == 1:
+         range_value = (int(discount_list[0]),99)
+       else:      
+         range_value = (min(list(map(int,discount_list))),99)
+       card_details = card_details.filter(discount__range = range_value).all().distinct()
     ajax = render_to_string('cards.html',{'details':card_details})
     category = render_to_string('kidscategory.html',{'allproducts':{'category':products}})
     ages = render_to_string('kidsage.html',{'allproducts':{'age':kids_age}})
