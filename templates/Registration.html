@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Create a new account</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://kit.fontawesome.com/0cfdca5d54.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  </head>
+  <body class="d-flex align-items-center justify-content-center">
+
+    <div class="bg-white register row align-items-center">
+      <div class="col mx-auto">
+        
+        <form action="{% url 'registration' %}" method="POST" class="p-4">
+         {% csrf_token %}
+              <div class="row mb-3">
+                <div class="col-4">
+                   <label for="username" class="pb-2 fw-bold d-block">Username</label>
+                </div>
+                <div class="col-8">
+                   <input type="text" placeholder="Enter Firstname" id="username"
+                     name="username" class="input" required>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-4">
+                   <label for="fname" class="pb-2 fw-bold d-block">First Name</label>
+                </div>
+                <div class="col-8">
+                   <input type="text" placeholder="Enter Firstname" id="fname"
+                     name="firstname" class="input" required>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-4">
+                   <label for="lname" class="pb-2 fw-bold d-block">Last Name</label>
+                </div>
+                <div class="col-8">
+                   <input type="text" placeholder="Enter Lastname" id="lname"
+                      name="lastname" class="input" required>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-4">
+                   <label for="email" class="pb-2 fw-bold d-block">Email Address</label>
+                </div>
+                <div class="col-8">
+                   <input type="email" placeholder="Enter Email"  id="email"
+                     name="email" class="input" required>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-4">
+                   <label for="psswrd" class="pb-2 fw-bold d-block">Password</label>
+                </div>
+                <div class="col-8">
+                   <input type="password" placeholder="Enter Password" id="psswrd"
+                     name="password" class="input" required>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-4">
+                   <label for="repeatpass" class="pb-2 fw-bold d-block">Repeat Password</label>
+                </div>
+                <div class="col-8">
+                   <input type="password" placeholder="Repeat Password" id="repeatpsswrd"
+                     name="repeatpass" class="input" required>
+                </div>
+              </div>
+              <div class="text-center mb-4">
+                  <input type="submit" value="Submit" class="submit btn">
+              </div>
+              <div class="text-center">
+                <p class="signin">Already have an account? <a href="{% url 'signin' %}">Sign in</a>.</p>
+              </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

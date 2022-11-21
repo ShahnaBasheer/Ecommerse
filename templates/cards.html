@@ -7,9 +7,12 @@
               <img src={{x.card_image.url}} class="card-img-top img-fluid" alt="images">
            </a>  
            <div class="card-body">
-              <p class="text-uppercase"><strong>{{x.seller}}</strong></p>
-              <p class="text-secondary text-capitalize">{{x.description}}</p>
-              <p>₹{{x.price}}</p>
+              <h6>{{x.brand.brand}}</h6>
+              <p class="text-secondary text-capitalize">{{x.title}}</p>
+              <p class="fs-6 fw-bold">₹{{x.price}}
+               <span class="text-decoration-line-through ms-2 text-secondary">
+                  {{x.mrp}}</span> <span class="text-success">{{x.discount}}%</span></p>
+
            </div>
         </div> 
      </div>

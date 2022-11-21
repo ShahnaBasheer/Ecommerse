@@ -26,7 +26,7 @@
 .dropdown-toggle::after{
   content: none;
 }
-.dropdown-menu[data-bs-popper]{
+.user.dropdown-menu[data-bs-popper]{
   left:-170px;
   top:33px;
 }
@@ -39,6 +39,15 @@
 .dropdown-menu .dropdown-item:hover,li a.dropdown-item:focus{
   background-color:rgb(231, 105, 105); 
   color:white; 
+}
+ul.brand.dropdown-menu{
+  height:327px;
+  overflow-y:auto;
+}
+ul.brand.dropdown-menu input {
+  width:140px;
+  font-size: 15px;
+  padding:4px;
 }
 .category{
 background-color: rgb(214, 237, 241);  
@@ -79,7 +88,7 @@ footer{
 /* homepage.html */
 
 .contact{
-   color:white;
+  color:white;
 }
 .contact h6{
   margin-bottom: 28px;
@@ -87,3 +96,4 @@ footer{
 .contact p,.mail address{
   font-size: 14.5px;
 }
+

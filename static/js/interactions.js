@@ -1,9 +1,10 @@
-
-$(document).ready(function(){
-    $("#clicksort").click(function(){
+$(document).ready(function(){  
+   
+   $("#clicksort").click(function(){
        $("#sortby").toggle();
-    });
-    $(".filter-radio,.filter-checkbox").on('click', function () {   
+   });
+   
+   $(".filter-radio,.filter-checkbox").on('click', function(){   
         let _filterObj = {};
         let _filterGender = $(this).data('gender');
         function keyvalue(){
@@ -15,9 +16,9 @@ $(document).ready(function(){
                 .map(function(el){return el.value;});
              });
          }
-        keyvalue();
+         keyvalue();
         
-        $.ajax({
+         $.ajax({
             url:'/' + _filterGender + '/' + 'filter_data',
             data: _filterObj,
             dataType:'json',
@@ -38,13 +39,19 @@ $(document).ready(function(){
                       success:function(response){
                        $(".products").html(response.details);
                       }
-                    });  
-                    
+                    });           
                   });  
                }
             }    
          });  
-        });
-      });
-   
+   });   
+   $("input#brandsearch").keyup(function(){
+      let li = $(".brand li a");
+      let inputvalue = $("#brandsearch").val().toLowerCase()
+      li.filter(function() {
+         $(this).toggle($(this).text().toLowerCase().startsWith(inputvalue))
+       });
+   }); 
+});
+     
    

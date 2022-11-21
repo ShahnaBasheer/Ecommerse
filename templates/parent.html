@@ -35,8 +35,17 @@
                  <li class="nav-item">
                     <a class="nav-link text-white" href="{% url 'kidspage'%}">Kids</a>
                  </li>
-                 <li class="nav-item">
-                    <a class="nav-link text-white" href="">All Brands</a>
+                 <li class="nav-item dropdown">
+                    <a class="nav-link text-white dropdown-toggle" href="#" role="navitem"
+                     id="DropdownBrand" data-bs-toggle="dropdown" aria-expanded="false">
+                     All Brands</a>
+                     <ul class="brand dropdown-menu" aria-labelledby="DropdownBrand">
+                        <input type="search" class="mx-auto my-1 d-block" id="brandsearch"
+                          placeholder="search brands..." name="bsearch">
+                        {% for b in allbrands %}
+                          <li><a class="dropdown-item" href="#">{{b.brand}}</a></li>
+                        {% endfor %}
+                     </ul>
                  </li>
               </ul>
             </div>
@@ -45,12 +54,19 @@
                   id="dropdownMenu" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="fa-solid fa-user"></i>
               </a>
-               <ul class="dropdown-menu" aria-labelledby="dropdownMenu">
-                 <li><a class="dropdown-item" href="#">Login/Signup Now</a></li>
+               <ul class="user dropdown-menu" aria-labelledby="dropdownMenu">
+               {% if user.is_authenticated %}
+                 <li><a class="dropdown-item" href="{% url 'signout' %}">Logout</a></li>
+               {% else %}
+                 <li><a class="dropdown-item" href="{% url 'signin' %}">Login/Signup Now</a></li>
+               {% endif %}
                  <li><a class="dropdown-item" href="#">Orders</a></li>
                </ul>
             </div>
-            <a class="text-white cartbutton" href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+            <a class="text-white cartbutton text-decoration-none" href="{% url 'cart' %}">
+               <span class="cart-qnty badge rounded-pill bg-danger">{{quantity}}</span>
+               <i class="fa-solid fa-cart-shopping"></i>
+            </a>
          </div>
       </nav> 
 
@@ -87,7 +103,7 @@
          </div>
          <div class="text-center copyright">© 2019 - 2022 Fashion Pvt.Ltd. All Rights Reserved</div>
       </div>
-    
+      {% block newjs %}{% endblock %}
       <script src="{% static 'js/interactions.js' %}"></script>
   </body>
 </html>

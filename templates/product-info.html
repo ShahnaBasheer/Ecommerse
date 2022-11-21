@@ -10,6 +10,10 @@
 products
 {% endblock %}
 
+{% block newjs %}
+  <script src="{% static 'js/product-info.js' %}"></script>
+{% endblock %}
+
 {% block categories %}
   <div class="mx-4 my-5 product-details">
     <div class="row">
@@ -18,30 +22,44 @@ products
       </div>
       <div class="col-5 py-4">
         <div class="productinfo">
-            <h6>{{details.seller}}</h6>
-            <h5 class="fs-5 pb-3">{{details.description}}</h5>
+            <h6>{{details.brand.brand}}</h6>
+            <h5 class="fs-5 pb-3">{{details.title}}</h5>
             <p class="price fw-bolder">₹{{details.price}} <span class="ms-3 offer fs-6">
-              {{details.discount}} Off</span></p>
+              {{details.discount}}% Off</span></p>
             <p class="text-secondary offerprice"><small>MRP
-              <span class="text-decoration-line-through"> ₹3999</span> 
+              <span class="text-decoration-line-through"> ₹{{details.mrp}}</span> 
               Inclusive of all taxes</small></p>
             <hr>
             <div class="py-3"> 
               <p class="me-4 text-decoration-underline selectsize">Select Size</p>
               <ul id="sizes" class="list-inline-item list-unstyled">
                  {% for z in details.size.all %}
-                   <li class=" list-inline-item mb-3">{{z.size}}</li>
+                   <li class="list-inline-item mb-3 selected-size"
+                     data-size="{{z.size}}">{{z.size}}</li>
                  {% endfor %}
               </ul>
+              <p class="text-danger" id="sizealert"></p>
             </div>
             
             <div class="d-grid">
-              <a href="#" class="addtocart btn btn-block mb-3">ADD TO CART</a>
-              <a href="#" class="buynow btn">BUY NOW</a>
+              <input type="hidden" class="hiddengender" data-gender={{details.gender}}>
+              <input type="hidden" class="hiddenid" data-pro_id={{details.id}}>
+              <button class="addtocart btn btn-block mb-3">ADD TO CART</button>
+              <button class="buynow btn">BUY NOW</button>
             </div>
 
         </div>
-        
+        <div class="mt-5">
+          <h5 class="pb-2">Sellers</h5>
+            {% for s in productdetails.Sellers.values %}
+              {% if productdetails.Sellers.values|length > 1 %} 
+               <input type="radio" value="{{s.seller}}" name="seller" required>
+              {% endif %}
+               <a href="#" class="seller">{{s.seller}}</a>
+               <p>{{s.about_us}}</p>              
+            {% endfor %}
+            <p class="text-danger" id="selleralert"></p>
+        </div>
         <div class="productinformation my-5">
             <h4>PRODUCT INFORMATIONS</h4>
             <div>
@@ -49,11 +67,18 @@ products
                 {% for x,y in productdetails.get_fields %}
                 <div class="row pb-3">
                    <div class="col-5 details fw-bold">{{x}}</div>
-                   <div class="col-7">{{y}}</div>
+                   {% if x == "Color" %}
+                      <div class="col-7">{{y.all|join:", "}}</div>
+                   {% else %}
+                      <div class="col-7">{{y}}</div>
+                   {% endif %}
                 </div>
                 {% endfor %}
+                
                 <h5 class="py-4">Descriptions</h5>
                 <p>{{productdetails.Descriptions}}</p>
+                <h5 class="py-4">About Us</h5>
+                <p>{{productdetails.Product.brand.about}}</p>
             </div>       
         </div>
       </div> 

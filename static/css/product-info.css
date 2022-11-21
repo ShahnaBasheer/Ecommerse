@@ -8,22 +8,28 @@
   font-size: 16px;
   color:rgb(142, 140, 140);
 }
- .offer{
+.offer{
   color:rgb(11, 143, 11);
  }
- .offerprice{
+.offerprice{
   margin-top:-15px;
  }
 .price{
   font-size:23px;
 }
 #sizes li{
-  border: 1px solid rgb(181, 181, 181);
+  border: 2px solid rgb(215, 215, 215);
+  border-radius: 2px;
   padding:3px 15px;
   font-weight: 600;
+  cursor:pointer;
  }
 .selectsize{
   font-size: 21px;
+}
+.selectedsize{
+  border:2px solid rgb(26, 114, 208) !important;
+  color:rgb(26, 114, 208) ;
 }
 .addtocart{
   padding:10px;
