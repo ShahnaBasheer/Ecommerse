@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from django.template.loader import render_to_string
-from ecomapp.models import BoysCategory, BoysDetail,BoysFashion, Brand, Cart, CartItem,GirlsCategory, GirlsDetail,GirlsFashion,MenCategory, MenDetail,MenFashion, Seller,WomenCategory,WomenDetail,WomenFashion,Size,KidsAge
+from ecomapp.models import BoysCategory, BoysDetail,BoysFashion, Brand, Cart, CartItem,GirlsCategory, GirlsDetail,GirlsFashion,MenCategory, MenDetail,MenFashion, SaveItForLater, Seller,WomenCategory,WomenDetail,WomenFashion,Size,KidsAge
 # Create your views here.
 
 def signin(request):
@@ -56,10 +56,11 @@ def womentab(request):
     card_details = WomenFashion.objects.all()
     products = WomenCategory.objects.all()
     size = Size.objects.all()
+    brand = Brand.objects.all()
     discounts = models.DISCOUNT_CHOICES
     #g_count = WomenFashion.objects.values('category__women').annotate(count = Count('id'))
     context = {
-      'allproducts':{'category':products,'size':size,'discounts':discounts},
+      'allproducts':{'category':products,'size':size,'discounts':discounts,'brands':brand},
       'details':card_details,
     }
     return render(request,'women.html',context)
@@ -75,11 +76,35 @@ def mentab(request):
     }
     return render(request,'men.html',context)
 
+def sortby(*args):
+    if args[1] == ['price_asc']:
+        card_details = args[0].order_by('price')
+    elif args[1] == ['price_desc']:
+        card_details = args[0].order_by('-price')
+    elif args[1] == ['newest']:
+        card_details = args[0].order_by('-upload_date')
+    elif args[1] == ['disc_desc']:
+        card_details = args[0].order_by('-discount')
+    elif args[1] == ['delivery']:
+        if len(args) == 4:
+          girls_filt = args[2].filter(dlvry_charges = "FREE")
+          boys_filt = args[3].filter(dlvry_charges = "FREE")
+          card_details = girls_filt.union(boys_filt)
+        else:
+          card_details = args[0].filter(dlvry_charges = "FREE").all().distinct()
+    else:
+        card_details = args[0]
+    print(args[1])
+    print(len(args))
+    print(card_details)
+    return card_details
+
 def filter_women(request):
     card_details = WomenFashion.objects.all()
     pro_list = request.GET.getlist('category[]')
     size_list = request.GET.getlist('size[]')
     discount_list = request.GET.getlist('discount[]')
+    sort_data = request.GET.getlist('sort[]')
     if len(pro_list) > 0:
       card_details = card_details.filter(category__women__in = pro_list).all().distinct()
     if len(size_list) > 0:
@@ -89,9 +114,10 @@ def filter_women(request):
          range_value = (int(discount_list[0]),99)
       else:      
          range_value = (min(list(map(int,discount_list))),99)
-      card_details = card_details.filter(discount__range = range_value).all().distinct().order_by('discount')
-       #add __in columnname to filter list of values    
-       #add getlist to take values as list      
+      card_details = card_details.filter(discount__range = range_value).all().distinct()
+    card_details = sortby(card_details,sort_data)
+    #add __in columnname to filter list of values    
+    #add getlist to take values as list      
     ajax = render_to_string('cards.html', {'details': card_details})
     return JsonResponse({'details': ajax})
 
@@ -100,6 +126,7 @@ def filter_men(request):
     pro_list = request.GET.getlist('category[]')
     size_list = request.GET.getlist('size[]')
     discount_list = request.GET.getlist('discount[]')
+    sort_data = request.GET.getlist('sort[]')
     if len(pro_list) > 0:
       card_details = card_details.filter(category__men__in = pro_list).all().distinct() 
     if len(size_list) > 0:
@@ -109,7 +136,8 @@ def filter_men(request):
          range_value = (int(discount_list[0]),99)
       else:      
          range_value = (min(list(map(int,discount_list))),99)
-      card_details = card_details.filter(discount__range = range_value).all().distinct().order_by('discount')
+      card_details = card_details.filter(discount__range = range_value).all().distinct()
+    card_details = sortby(card_details,sort_data)
     ajax = render_to_string('cards.html', {'details': card_details})
     return JsonResponse({'details': ajax})
 
@@ -133,6 +161,7 @@ def filter_kids(request):
     age_list = request.GET.getlist('age[]')
     size_list = request.GET.getlist('size[]')
     discount_list = request.GET.getlist('discount[]')
+    sort_data = request.GET.getlist('sort[]')
     if len(pro_list) > 0:
        girls_filt = girls_filt.filter(category__girls__in = pro_list).all().distinct()
        boys_filt = boys_filt.filter(category__boys__in = pro_list).all().distinct()
@@ -152,7 +181,8 @@ def filter_kids(request):
          range_value = (min(list(map(int,discount_list))),99)
        girls_filt = girls_filt.filter(discount__range = range_value).all().distinct()
        boys_filt = boys_filt.filter(discount__range = range_value).all().distinct()
-       card_details = girls_filt.union(boys_filt).order_by('discount')
+       card_details = girls_filt.union(boys_filt)
+    card_details = sortby(card_details,sort_data,girls_filt,boys_filt)
     ajax = render_to_string('cards.html',{'details':card_details}) 
     return JsonResponse({'details':ajax})
 
@@ -166,6 +196,9 @@ def filter_girls(request):
     age_list = request.GET.getlist('age[]')
     size_list = request.GET.getlist('size[]')
     discount_list =request.GET.getlist('discount[]')
+    sort_data = request.GET.getlist('sort[]')
+    print("****************")
+    print(age_list)
     if len(pro_list) > 0:
        card_details = card_details.filter(category__girls__in = pro_list).all().distinct()
     if len(age_list) > 0:
@@ -178,6 +211,7 @@ def filter_girls(request):
        else:      
           range_value = (min(list(map(int,discount_list))),99)
        card_details = card_details.filter(discount__range = range_value).all().distinct()
+    card_details = sortby(card_details,sort_data)
     ajax = render_to_string('cards.html',{'details':card_details})
     category = render_to_string('kidscategory.html',{'allproducts':{'category':products}})
     ages = render_to_string('kidsage.html',{'allproducts':{'age':kids_age}})
@@ -195,6 +229,7 @@ def filter_boys(request):
     age_list = request.GET.getlist('age[]')
     size_list = request.GET.getlist('size[]')
     discount_list = request.GET.getlist('discount[]')
+    sort_data = request.GET.getlist('sort[]')
     if len(pro_list) > 0:
        card_details = card_details.filter(category__boys__in = pro_list).all().distinct()
     if len(age_list) > 0:
@@ -207,6 +242,7 @@ def filter_boys(request):
        else:      
          range_value = (min(list(map(int,discount_list))),99)
        card_details = card_details.filter(discount__range = range_value).all().distinct()
+    card_details = sortby(card_details,sort_data)
     ajax = render_to_string('cards.html',{'details':card_details})
     category = render_to_string('kidscategory.html',{'allproducts':{'category':products}})
     ages = render_to_string('kidsage.html',{'allproducts':{'age':kids_age}})
@@ -237,20 +273,23 @@ def product_info(request,product_id):
 
 def cart(request):
     context = {} 
-    try:
-      if request.user.is_authenticated:
-         cartdata = Cart.objects.get(user=request.user)
-         cartitem = CartItem.objects.all()
-         total_amnt = cartdata.total_amnt + cartdata.total_dscnt
+    if request.user.is_authenticated:
+       save_for_later = SaveItForLater.objects.filter(user=request.user)
+       try:
+          cartdata = Cart.objects.get(user=request.user)
+          cartitem = CartItem.objects.filter(cart=cartdata)
+          total_amnt = cartdata.total_amnt + cartdata.total_dscnt
+          context = {
+            'cart':cartdata,
+            'cartitems':cartitem,
+            'total':total_amnt,
+            'saveit':save_for_later,
+          }
+       except Cart.DoesNotExist:
          context = {
-           'cart':cartdata,
-           'cartitems':cartitem,
-           'total':total_amnt,
-         }
-    except Cart.DoesNotExist:
-      context = {
-        'cart': 0
-      }  
+           'cart': 0,
+           'saveit':save_for_later,
+         }  
     return render(request,'cart.html',context)
 
 #Not s view function,it is for reusability only
@@ -289,8 +328,12 @@ def add_to_cart(request,product_id):
         if not created:
            cartitem.quantity += 1
         cartitem.save()  
-        cart_update(cart)           
-    return JsonResponse({'cart_qnty':cart.total_qty})
+        cart_update(cart)
+        saveit = SaveItForLater.objects.filter(user=request.user,image=products.card_image,
+                size=size,seller=seller,brand=products.brand,title=products.title)
+        if saveit:
+           saveit.delete()                   
+    return JsonResponse({'cart_qnty':cart.total_qty,'product':product_id,'info':infotag})
 
 def update_quantity(request,cart_id):
     cart = Cart.objects.get(user=request.user)
@@ -316,6 +359,38 @@ def remove_cart_item(request,cart_id):
     cart = Cart.objects.get(user=request.user)
     cartitem = CartItem.objects.get(pk=cart_id)
     cartitem.delete()
+    cart_update(cart)
+    return redirect('cart')
+
+def save_for_later(request,save_id):
+    cart = Cart.objects.get(user=request.user)
+    cartitem =  CartItem.objects.get(pk = save_id)
+    save_later = SaveItForLater(user=request.user,image=cartitem.cart_image,
+        title=cartitem.title,brand=cartitem.brand,size=cartitem.size,
+        seller=cartitem.seller,price=cartitem.total_price,mrp=cartitem.total_mrp,
+        qty=cartitem.quantity,object_id=cartitem.object_id,
+        content_type_id=cartitem.content_type_id)
+    save_later.save() 
+    cartitem.delete()
+    cart_update(cart)
+    return redirect('cart')
+
+def remove_save_later(request,save_id):
+    save_later = SaveItForLater.objects.get(pk=save_id)
+    save_later.delete()
+    return redirect('cart')
+
+def move_to_cart(request,move_id):
+    saveit = SaveItForLater.objects.get(pk=move_id)
+    cart,created = Cart.objects.get_or_create(user=request.user)
+    cartitem,created = CartItem.objects.get_or_create(cart=cart,
+        cart_image=saveit.image,size=saveit.size,
+        title=saveit.title,brand=saveit.brand,total_mrp=saveit.mrp,
+        seller=saveit.seller,total_price=saveit.price, 
+        quantity=saveit.qty,object_id=saveit.object_id,
+        content_type_id=saveit.content_type_id)
+    cartitem.save()
+    saveit.delete()
     cart_update(cart)
     return redirect('cart')
 

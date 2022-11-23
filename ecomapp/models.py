@@ -130,7 +130,6 @@ class CartItem(models.Model):
    cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
    cart_image=models.ImageField(null=True)
    title = models.CharField(max_length=60,null=True)
-   content_type = models.ForeignKey(ContentType,on_delete=models.CASCADE)
    quantity = models.IntegerField(default=1)
    size = models.ForeignKey(Size,on_delete=models.CASCADE,null=True)
    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True)
@@ -138,6 +137,7 @@ class CartItem(models.Model):
    delivery = models.CharField(max_length=30,default=0)
    total_price = models.IntegerField()
    total_mrp = models.IntegerField(default=0)
+   content_type = models.ForeignKey(ContentType,on_delete=models.CASCADE)
    object_id = models.PositiveIntegerField()
    content_object = GenericForeignKey('content_type', 'object_id')
    
@@ -149,7 +149,6 @@ class CartItem(models.Model):
         
 class iambase(models.Model):
    card_image = models.ImageField(upload_to=user_directory_path) 
-   brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True)
    title = models.CharField(max_length=60)
    price = models.IntegerField()
    mrp = models.IntegerField(default=0)
@@ -167,18 +166,21 @@ class iambase(models.Model):
      abstract = True
 
 class WomenFashion(iambase):
+    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True,related_name="women_brands")
     category = models.ForeignKey(WomenCategory, on_delete=models.CASCADE)   
     gender = "women"
     def __str__(self):
        return self.title
 
 class MenFashion(iambase):
+    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True,related_name="men_brands")
     category = models.ForeignKey(MenCategory, on_delete=models.CASCADE)
     gender = "men"
     def __str__(self):
        return self.title
 
 class GirlsFashion(iambase):
+    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True,related_name="girls_brands")
     category = models.ForeignKey(GirlsCategory, on_delete=models.CASCADE)
     age = models.ManyToManyField(KidsAge)
     gender = "girls"
@@ -186,6 +188,7 @@ class GirlsFashion(iambase):
        return self.title
 
 class BoysFashion(iambase):
+    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True,related_name="boys_brands")
     category = models.ForeignKey(BoysCategory, on_delete=models.CASCADE)
     age = models.ManyToManyField(KidsAge)
     gender = "boys"
@@ -242,4 +245,17 @@ class BoysDetail(ProductDetail):
    Type = models.ForeignKey(BoysCategory,max_length=50,on_delete=models.CASCADE)
 
 
- 
+class SaveItForLater(models.Model):
+   user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+   image=models.ImageField(null=True)
+   title = models.CharField(max_length=60,null=True)
+   size = models.ForeignKey(Size,on_delete=models.CASCADE,null=True)
+   brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True)
+   seller = models.ForeignKey(Seller,on_delete=models.CASCADE,null=True)
+   qty = models.IntegerField(default=1)
+   price = models.IntegerField()
+   mrp = models.IntegerField(default=0)
+   content_type = models.ForeignKey(ContentType,on_delete=models.CASCADE)
+   object_id = models.PositiveIntegerField()
+   content_object = GenericForeignKey('content_type', 'object_id')
+   

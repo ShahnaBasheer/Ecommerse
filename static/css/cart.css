@@ -9,7 +9,7 @@ body{
   height:133px;
   border:1px solid black;
 }
-.pricedetails,.items{
+.pricedetails,.items,.save-for-later{
   box-shadow: 1px 2px 6px #585858;
 }
 .shophead{

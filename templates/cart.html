@@ -11,10 +11,10 @@
 
 {% block categories %}
    <div class="container-fluid mt-5 p-4"> 
-      <div class="cart">     
-         <div class="row">
-         {% if user.is_authenticated %}
+      <div class="cart">
 
+         {% if user.is_authenticated %}
+         <div class="row">
             {% if cartitems %}
             <div class="col-8 p-0">
                <div class="items bg-body m-1 p-3 rounded">
@@ -36,7 +36,7 @@
                         <p>₹{{c.total_price}}
                            <span class="ms-3 text-success text-decoration-line-through fs-6">₹{{c.total_mrp}}</span>
                         </p>
-                        <a href="#" class="btn btn-danger btn-sm">Save It For Later</a> 
+                        <a href="{% url 'save_for_later' c.id %}" class="btn btn-danger btn-sm">Save It For Later</a> 
                         <a href="{% url 'remove_cartitem' c.id %}" class="btn btn-success btn-sm">Remove</a>
                      </div>
                      <div class="col-3">  
@@ -53,9 +53,10 @@
                   <hr>
                   {% endfor %}
                   <button type="button" class="btn btn-warning ms-auto d-block">PLACE THE ORDER</button>
-               </div>
+               </div>               
             </div>
-            <div class="col-4 p-0">
+
+            <div class="col-4 p-0 price-details">
                <div class="pricedetails bg-body m-1 p-3 rounded">
                   <h5 class="pricehead">Price Details</h5>
                   <hr class="hrrule">
@@ -78,11 +79,56 @@
             {% else %}
               <h2 class="text-center">YOUR CART IS EMPTY</h2>
             {% endif %}
+         </div>
+
+   <!-- SAVE IT FOR LATER -->
+         <div class="row">
+          {% if cartitems %}
+            <div class="col-8 p-0">
+          {% else %}
+            <div class="col-12 p-0">
+          {% endif %}      
+             <div class="save-for-later bg-body m-1 p-3 rounded">
+               <h4 class="text-center">SAVE IT FOR LATER</h4>
+               <h5 class="text-center">items({{saveit.count}})</h5>
+   
+              {% for s in saveit %}
+              <div class="row my-4">
+                 <div class="col-3">
+                    <div class="image-container mb-3">
+                       <img src={{s.image.url}} alt="cart_image" class="img-fluid" width=100 height=130>
+                    </div>
+                    <div class="btn-group btn-group-sm quantity" role="group" aria-label="quantity">
+                       <a class="btn btn-outline-primary" href="#">
+                          <i class="fa-solid fa-plus"></i></a>
+                       <button type="button" class="btn btn-outline-primary border-start-0 border-end-0 fw-bolder">
+                          {{s.qty}}</button>
+                       <a class="btn btn-outline-primary" href="#">
+                          <i class="fa-solid fa-minus"></i></a>
+                    </div>
+                 </div>
+                 <div class="col-6">
+                    <p class="fw-bold">{{s.brand}}</p>
+                    <p class="fw-bold">{{s.title}}</p>
+                    <p>Size: {{s.size}}</p>
+                    <p>Seller: {{s.seller}}</p>
+                    <p>₹{{s.price}}
+                       <span class="ms-3 text-success text-decoration-line-through fs-6">₹{{s.mrp}}</span>
+                    </p>
+                    <a href="{% url 'move_to_cart' s.id %}" class="btn btn-danger btn-sm">Move To Cart</a> 
+                    <a href="{% url 'remove_save_later' s.id %}" class="btn btn-success btn-sm">Remove</a>
+                 </div>          
+               </div>
+               <hr>
+               {% endfor %}
+             </div>
+            </div>
+         </div>   
          {% else %}
             <h2>Login To Add Items To Cart</h2>
             <button>Login</button>
-         {% endif %}
-         </div>
+         {% endif %}   
       </div>
    </div>
+
 {% endblock %}

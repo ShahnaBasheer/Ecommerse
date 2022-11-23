@@ -4,20 +4,20 @@ $(document).ready(function(){
        $("#sortby").toggle();
    });
    
-   $(".filter-radio,.filter-checkbox").on('click', function(){   
+   $(".filter-radio,.filter-checkbox,#sortby input").on('click', function(){   
         let _filterObj = {};
         let _filterGender = $(this).data('gender');
+       
         function keyvalue(){
-          $(".filter-radio,.filter-checkbox").each(function (index,ele) {
+          $(".filter-radio,.filter-checkbox,#sortby input").each(function (index,ele) {
              let _filterValue = $(this).val();
              let _filterKey = $(this).data('filter');
-             _filterObj[_filterKey] = Array.from(document.querySelectorAll(
-                'input[data-filter='+_filterKey+']:checked'))
+             _filterObj[_filterKey] = Array.from($("input[data-filter="+_filterKey+"]:checked")) 
                 .map(function(el){return el.value;});
-             });
-         }
+             });  
+         }    
          keyvalue();
-        
+      
          $.ajax({
             url:'/' + _filterGender + '/' + 'filter_data',
             data: _filterObj,
@@ -37,7 +37,7 @@ $(document).ready(function(){
                       data: _filterObj,
                       dataType:'json',
                       success:function(response){
-                       $(".products").html(response.details);
+                        $(".products").html(response.details);
                       }
                     });           
                   });  
@@ -51,7 +51,7 @@ $(document).ready(function(){
       li.filter(function() {
          $(this).toggle($(this).text().toLowerCase().startsWith(inputvalue))
        });
-   }); 
+   });
 });
      
-   
+  
