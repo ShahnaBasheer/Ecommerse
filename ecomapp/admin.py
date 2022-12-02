@@ -1,10 +1,9 @@
 
 from django.contrib import admin
-from . models import BoysDetail, Brand, Cart, CartItem, Color,GirlsDetail,MenDetail,Pattern,KidsAge,Material,Neck,Occasion,Pocket, SaveItForLater, Seller,Size,Sleeve,WomenCategory,MenCategory,GirlsCategory,BoysCategory,WomenFashion,MenFashion,GirlsFashion,BoysFashion,WomenDetail
+from . models import Brand, Cart, CartItem, Color,KidsCategory, KidsDetail, KidsFashion,MenDetail,Pattern,KidsAge,Material,Neck,Occasion,Pocket, SaveItForLater, Seller,Size,Sleeve,WomenCategory,MenCategory,WomenFashion,MenFashion,WomenDetail
 # Register your models here.
 
-admin.site.register(BoysCategory)
-admin.site.register(GirlsCategory)
+admin.site.register(KidsCategory)
 admin.site.register(WomenCategory)
 admin.site.register(MenCategory)
 admin.site.register(Material)
@@ -15,7 +14,10 @@ admin.site.register(Neck)
 admin.site.register(Pocket)
 admin.site.register(Occasion)
 admin.site.register(KidsAge)
-admin.site.register(Size)
+
+class SizeAdmin(admin.ModelAdmin):
+  list_display = ('id','size')
+admin.site.register(Size,SizeAdmin)
 
 class BrandAdmin(admin.ModelAdmin):
   list_display = ('id','brand','about')
@@ -31,16 +33,13 @@ class MenAdmin(admin.ModelAdmin):
                  'card_image','dlvry_charges','upload_date')
 admin.site.register(MenFashion,MenAdmin)
 
-class GirlsAdmin(admin.ModelAdmin):
-  list_display = ('id','category','brand','title','price','mrp','discount',
+class KidsAdmin(admin.ModelAdmin):
+  list_display = ('id','gender','category','brand','title','price','mrp','discount',
                  'card_image','dlvry_charges','upload_date')
-admin.site.register(GirlsFashion,GirlsAdmin)
+  list_editable = ('gender','category','brand','title','price','mrp','discount',
+                 'card_image','dlvry_charges')
+admin.site.register(KidsFashion,KidsAdmin)
 
-class BoysAdmin(admin.ModelAdmin):
-  list_display = ('id','category','brand','title','price','mrp','discount',
-                 'card_image','dlvry_charges','upload_date')
-admin.site.register(BoysFashion,BoysAdmin)
-  
 class WomenDetailAdmin(admin.ModelAdmin):
   list_display = ('id','Product','Type','Material','Pattern','Sleeves','Pocket','Neck',
                   'Rise','Occasion','Packet_Contains','Stretchable','Manufacture','Country','Return')
@@ -51,15 +50,10 @@ class MenDetailAdmin(admin.ModelAdmin):
                  'Rise','Occasion','Packet_Contains','Stretchable','Manufacture','Country','Return')
 admin.site.register(MenDetail,MenDetailAdmin)
 
-class GirlsDetailAdmin(admin.ModelAdmin):
-  list_display = ('id','Product','Type','Material','Pattern','Sleeves','Pocket','Neck','Rise',
-                  'Occasion','Packet_Contains','Stretchable','Manufacture','Country','Return')
-admin.site.register(GirlsDetail,GirlsDetailAdmin)
-
-class BoysDetailAdmin(admin.ModelAdmin):
+class KidsDetailAdmin(admin.ModelAdmin):
   list_display = ('id','Product','Type','Material','Pattern','Sleeves','Pocket','Neck',
                   'Rise','Occasion','Packet_Contains','Stretchable','Manufacture','Country','Return')
-admin.site.register(BoysDetail,BoysDetailAdmin)
+admin.site.register(KidsDetail,KidsDetailAdmin)
 
 class CartAdmin(admin.ModelAdmin):
   list_display = ('id','user','total_amnt','total_dscnt','total_qty','dlvry_chrg','date_created')

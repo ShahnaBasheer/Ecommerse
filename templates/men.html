@@ -14,49 +14,20 @@ Men Fashions
     {% include 'sortby.html' with heading="men" %}
    
    <!-- Products-->
-   <div class="mx-4 my-5 womenpage">
+   <div class="mx-4 my-5 menpage">
       <div class="row ">
          <div class="col-md-3 filterscontainer">
             <div class="filters">
                <h5>Filters</h5>
                
-               <div class="filtbox p-2 mb-2" >
-                   <h6>Category</h6> 
-                   <div class="px-3">
-                     {% for d in allproducts.category %}
-                        <div class="d-flex justify-content-between pb-2">
-                          <label for="pro{{forloop.counter}}">{{d.men}}</label>
-                          <input type="checkbox" id="pro{{forloop.counter}}" data-gender="men"
-                             data-filter="category" class="filter-checkbox" value="{{d.men}}">
-                        </div>
-                     {% endfor %}   
+               <div class="all_filters">
+                  {% for key,value in allproducts.items %}
+                   <div id="{{key}}box">
+                      {% include 'other_filters.html' %}
                    </div>
-               </div> 
-               <div class="filtbox p-2 mb-2" >
-                  <h6>Size</h6>
-                    <div class="px-3">
-                     {% for d in allproducts.size %}
-                       <div class="d-flex justify-content-between pb-2">
-                           <label for="size{{forloop.counter}}">{{d.size}}</label>
-                           <input type="checkbox" id="size{{forloop.counter}}" data-gender="men"
-                              data-filter="size" class="filter-checkbox" value="{{d.size}}">      
-                       </div>
-                     {% endfor %}
-                    </div>  
-               </div>
-
-               <div class="filtbox p-2 mb-2" >
-                  <h6>Discount</h6> 
-                    <div class="px-3">
-                     {% for key,value in allproducts.discounts %}
-                       <div class="d-flex justify-content-between pb-2">
-                         <label for="offer{{forloop.counter}}">{{value}}</label>
-                         <input type="checkbox" id="offer{{forloop.counter}}" data-gender="men"
-                            data-filter="discount" class="filter-checkbox" value="{{key}}">
-                       </div>
-                     {% endfor %}   
-                    </div>
-               </div> 
+                 {% endfor %}     
+                 </div> 
+                             
             </div>
          </div>    
          <!-- All products images-->

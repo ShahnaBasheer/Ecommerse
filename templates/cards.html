@@ -3,7 +3,7 @@
      {% for x in details %}
      <div class="col-6 col-md-4">
         <div class="card mb-3">
-           <a href="{% url 'product_info' x.id %}?info={{x.gender}}">
+           <a href="{% url 'product_info' x.id %}?info={{gender}}">
               <img src={{x.card_image.url}} class="card-img-top img-fluid" alt="images">
            </a>  
            <div class="card-body">

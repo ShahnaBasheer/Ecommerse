@@ -14,7 +14,7 @@ Kids Fashions
   {% include 'sortby.html' with heading="kids" %}
    
    <!-- Products-->
-   <div class="mx-4 my-5 womenpage">
+   <div class="mx-4 my-5 kidspage">
       <div class="row ">
          <div class="col-md-3 filterscontainer">
             <div class="filters">
@@ -25,34 +25,48 @@ Kids Fashions
                   <div class="px-3">
                      <div class="d-flex justify-content-between pb-2">
                         <label for="girls">Girls</label>
-                        <input type="radio" id="girls" value="girls" 
+                        <input type="radio" id="girls" value="Girls" 
                            class="filter-radio" name="gender"
-                           data-filter="gender" data-gender="girls">
+                           data-filter="gender" data-gender="kids">
                      </div>
                      <div class="d-flex justify-content-between pb-2">
                         <label for="boys">Boys</label>
-                        <input type="radio" id="boys" value="boys" 
+                        <input type="radio" id="boys" value="Boys" 
                             class="filter-radio" name="gender"
-                            data-filter="gender" data-gender="boys">
+                            data-filter="gender" data-gender="kids">
                      </div>   
                   </div>
                 </div>
+                
+                {% for key,value in allproducts.items %}
+               <div class="filtbox p-2 mb-2" id="{{key}}" >
+                  <h6 class="text-capitalize">{{key}}</h6> 
+                    <div class="px-3">
+                     {% if key == 'discount' %}
+                        {% for k,v in value %}
+                          <div class="d-flex justify-content-between pb-2">
+                            <label for="{{key}}{{forloop.counter}}">{{v}}</label>
+                            <input type="checkbox" id="{{key}}{{forloop.counter}}" data-gender="kids"
+                               data-filter="{{key}}" class="filter-checkbox" value="{{k}}">
+                          </div>
+                        {% endfor %}  
+                     {% else %}   
+                        {% for v in value %}
+                           <div class="d-flex justify-content-between pb-2">
+                             <label for="{{key}}{{forloop.counter}}">{{v}}</label>
+                             <input type="checkbox" id="{{key}}{{forloop.counter}}" data-gender="kids"
+                                data-filter="{{key}}" class="filter-checkbox" value="{{v}}">
+                           </div>
+                        {% endfor %}   
+                     {% endif %}
+                    </div>    
+               </div> 
+               {% endfor %}
+               
+               <div class="other_filters">
+                  {% include 'other_filters.html' %}
+               </div>
 
-                <div class="filtbox p-2 mb-2" id="agebox">
-                   {% include 'kidsage.html' %}
-                 </div>
-
-                 <div class="filtbox p-2 mb-2" id="catbox">
-                   {% include 'kidscategory.html' %}  
-                 </div>
-                 
-                 <div class="filtbox p-2 mb-2" id="sizebox">
-                  {% include 'kidsize.html' %}  
-                 </div>
-                 
-                 <div class="filtbox p-2 mb-2" id="offerbox">
-                  {% include 'kidsdiscount.html' %}  
-                 </div>
             </div>
          </div>    
          <!-- All products images-->
