@@ -130,6 +130,6 @@ def product_filters(*args):
            continue
         value = render_to_string('other_filters.html',{'value':y,'key':x,'gender':args[2]})
         filters[x] = value  
-    ajax = render_to_string('cards.html', {'details': card_details}) 
+    ajax = render_to_string('cards.html', {'details': card_details,'gender':args[2]}) 
     return {'details':ajax,'filter':filters}
 

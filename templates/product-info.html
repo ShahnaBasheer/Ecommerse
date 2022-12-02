@@ -30,25 +30,30 @@ products
               <span class="text-decoration-line-through"> ₹{{details.mrp}}</span> 
               Inclusive of all taxes</small></p>
             <hr>
-            <div class="py-3"> 
-              <p class="me-4 text-decoration-underline selectsize">Select Size</p>
-              <ul id="sizes" class="list-inline-item list-unstyled">
-                 {% for z in details.size.all %}
-                   <li class="list-inline-item mb-3 selected-size"
-                     data-size="{{z.size}}">{{z.size}}</li>
-                 {% endfor %}
-              </ul>
-              <p class="text-danger" id="sizealert"></p>
-            </div>
-            
+            {% if sizeall %} 
+              <div class="py-3"> 
+                <p class="me-4 text-decoration-underline selectsize">Select Size</p>
+                <ul id="sizes" class="list-inline-item list-unstyled">
+                   {% for z in details.size.all %}
+                     <li class="list-inline-item mb-3 selected-size"
+                       data-size="{{z.size}}">{{z.size}}</li>
+                   {% endfor %}
+                </ul>
+                <p class="text-danger" id="sizealert"></p>
+              </div>
+            {% endif %}
             <div class="d-grid">
               <input type="hidden" class="hiddengender" data-gender={{gender}}>
               <input type="hidden" class="hiddenid" data-pro_id={{details.id}}>
-              <button class="addtocart btn btn-block mb-3">ADD TO CART</button>
+              {% if gotocart %}
+                  <a class="gotocart btn btn-block mb-3" href="{% url 'cart' %}">GO TO CART</a>          
+              {% else %}
+                  <button class="addtocart btn btn-block mb-3">ADD TO CART</button>
+              {% endif %}
               <button class="buynow btn">BUY NOW</button>
             </div>
-
         </div>
+ 
         <div class="mt-5">
           <h5 class="pb-2">Sellers</h5>
             {% for s in productdetails.Sellers.values %}
@@ -60,7 +65,7 @@ products
             {% endfor %}
             <p class="text-danger" id="selleralert"></p>
         </div>
-        <div class="productinformation my-5">
+          <div class="productinformation my-5">
             <h4>PRODUCT INFORMATIONS</h4>
             <div>
                 <h5 class="py-4">Product Details</h5>

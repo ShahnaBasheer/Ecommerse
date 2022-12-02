@@ -37,6 +37,12 @@
   border:none;
   background-color: brown;
 }
+.gotocart{
+  padding:10px;
+  color:white;
+  border:none;
+  background-color: rgb(205, 125, 55);
+}
 .buynow{
   padding:10px;
   color:white;

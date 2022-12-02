@@ -234,7 +234,7 @@ class SaveItForLater(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
    image=models.ImageField(null=True)
    title = models.CharField(max_length=60,null=True)
-   size = models.ForeignKey(Size,on_delete=models.CASCADE,null=True)
+   size = models.ForeignKey(Size,on_delete=models.CASCADE,null=True,blank=True)
    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True)
    seller = models.ForeignKey(Seller,on_delete=models.CASCADE,null=True)
    qty = models.IntegerField(default=1)

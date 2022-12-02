@@ -63,10 +63,9 @@ def mentab(request):
 
 def kidstab(request):
     card_details = KidsFashion.objects.all()
-    products = KidsCategory.objects.all()
     pro_info = KidsDetail.objects.all()
     kids_age = KidsAge.objects.all()
-    context = import_fnctns.product_page(card_details,pro_info,products,'kids')
+    context = import_fnctns.product_page(card_details,pro_info,'kids')
     context['allproducts']['age'] = kids_age
     return render(request,'kids.html',context)
 
@@ -88,20 +87,30 @@ def filter_kids(request):
 def product_info(request,product_id):
     products = ""
     product_details= ""
+    gotocart = sizeall = False
     infotag = request.GET['info']
     if infotag == 'women':
-      products = WomenFashion.objects.get(pk = product_id)
-      product_details = get_object_or_404(WomenDetail, Product__id = product_id)         
+       products = WomenFashion.objects.get(pk = product_id)
+       product_details = get_object_or_404(WomenDetail, Product__id = product_id)         
     if infotag =='men':
-      products = MenFashion.objects.get(pk = product_id)
-      product_details = get_object_or_404(MenDetail, Product__id = product_id)
+       products = MenFashion.objects.get(pk = product_id)
+       product_details = get_object_or_404(MenDetail, Product__id = product_id)
     if infotag == 'kids':
-      products = KidsFashion.objects.get(pk = product_id)
-      product_details = get_object_or_404(KidsDetail, Product__id = product_id)
+       products = KidsFashion.objects.get(pk = product_id)
+       product_details = get_object_or_404(KidsDetail, Product__id = product_id)
+    if request.user.is_authenticated:
+        cartdata = Cart.objects.get(user=request.user)
+        cartitem = CartItem.objects.filter(cart=cartdata).values_list('title',flat=True).distinct()
+        if products.title in cartitem:
+            gotocart = True      
+    if len(products.size.all()) > 0:
+        sizeall = True
     context = {
       'details':products,
       'gender':infotag,
       'productdetails':product_details,
+      'gotocart':gotocart,
+      'sizeall':sizeall,   
     }  
     return render(request,'product-info.html',context)
 
