@@ -140,8 +140,11 @@ def cart(request):
 def add_to_cart(request,product_id):
     products = '';
     infotag = request.GET['info'];
-    size = Size.objects.get(size=request.GET['size'])
     seller = Seller.objects.get(seller=request.GET['seller'])
+    if "size[]" in request.GET:
+        size = Size.objects.get(size=request.GET['size'])
+    else:
+        size = None
     if request.user.is_authenticated:      
         if infotag == 'women':
             products = WomenFashion.objects.get(pk=product_id) 
@@ -149,7 +152,7 @@ def add_to_cart(request,product_id):
             products = MenFashion.objects.get(pk=product_id)
         if infotag == 'kids':
             products = KidsFashion.objects.get(pk=product_id)
-      
+        
         cart,created = Cart.objects.get_or_create(user=request.user)
         cartitem,created = products.cartitems.get_or_create(cart=cart,seller=seller,
                        brand=products.brand,cart_image=products.card_image,

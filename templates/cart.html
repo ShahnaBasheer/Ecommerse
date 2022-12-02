@@ -31,7 +31,10 @@
                      <div class="col-6">
                         <p class="fw-bold">{{c.brand}}</p>
                         <p class="fw-bold">{{c.title}}</p>
-                        <p>Size: {{c.size}}</p>
+                        {% if c.size == None %}
+                        {% else %}
+                           <p>Size: {{c.size}}</p>
+                        {% endif %}
                         <p>Seller: {{c.seller}}</p>
                         <p>₹{{c.total_price}}
                            <span class="ms-3 text-success text-decoration-line-through fs-6">₹{{c.total_mrp}}</span>
@@ -110,7 +113,10 @@
                  <div class="col-6">
                     <p class="fw-bold">{{s.brand}}</p>
                     <p class="fw-bold">{{s.title}}</p>
-                    <p>Size: {{s.size}}</p>
+                    {% if s.size == None %}
+                    {% else %}
+                      <p>Size: {{s.size}}</p>
+                    {% endif %}
                     <p>Seller: {{s.seller}}</p>
                     <p>₹{{s.price}}
                        <span class="ms-3 text-success text-decoration-line-through fs-6">₹{{s.mrp}}</span>

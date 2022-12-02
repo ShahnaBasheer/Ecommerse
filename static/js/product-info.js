@@ -17,8 +17,10 @@ $(document).ready(function(){
     }else{
       seller = $('.seller').text();
     }
-
-    if(sizetag.hasClass('selectedsize') && seller){   
+    console.log("clicked")
+    console.log(seller)
+    console.log(sizetag.length)
+    if((sizetag.hasClass('selectedsize')||sizetag.length==0) && seller){   
         let product={'info':gender,'size':size,'seller':seller}
         $.ajax({
           url:'/add_to_cart/' + pro_id,
