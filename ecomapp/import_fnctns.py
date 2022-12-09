@@ -1,15 +1,16 @@
 from . import models
-from .models import CartItem
+from .models import EcomCartItem
 from django.db.models import Sum
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 def product_page(*args):
     size = args[0].values_list('size__size',flat=True).exclude(size__size=None).distinct().order_by('-size__id')
     brand = args[0].values_list('brand__brand',flat=True).exclude(brand__brand=None).distinct()
-    color = args[1].values_list('Color__color',flat=True).exclude(Color__color=None).distinct()
-    material =args[1].values_list('Material__material',flat=True).exclude(Material__material=None).distinct()
-    pattern = args[1].values_list('Pattern__pattern',flat=True).exclude(Pattern__pattern=None).distinct()
-    occasion = args[1].values_list('Occasion__occasion',flat=True).exclude(Occasion__occasion=None).distinct()
+    color = args[0].values_list('pros__Color__color',flat=True).exclude(pros__Color__color=None).distinct()
+    material =args[0].values_list('pros__Material__material',flat=True).exclude(pros__Material__material=None).distinct()
+    pattern = args[0].values_list('pros__Pattern__pattern',flat=True).exclude(pros__Pattern__pattern=None).distinct()
+    occasion = args[0].values_list('pros__Occasion__occasion',flat=True).exclude(pros__Occasion__occasion=None).distinct()
     discounts = models.DISCOUNT_CHOICES
     neck = pocket = sleeve = rise = stretch = [] 
     products = args[0].values_list('category__category',flat=True)\
@@ -21,7 +22,7 @@ def product_page(*args):
                    'occasion':occasion,'neck':neck,'pocket':pocket,'sleeve':sleeve,
                    'rise':rise,'stretchable':stretch},
       'details':args[0],
-      'gender':args[2],
+      'gender':args[1],
     }
     return context
 
@@ -41,7 +42,7 @@ def sortby(*args):
     return card_details
 
 def cart_update(cart):
-    cart_obj = CartItem.objects.filter(cart=cart)
+    cart_obj = EcomCartItem.objects.filter(cart=cart)
     if len(cart_obj) == 0:
       cart.delete()
     else:
@@ -53,7 +54,7 @@ def cart_update(cart):
 
 def product_filters(*args):
     card_details = args[0]
-    gender = args[1].GET.getlist('gender[]')
+    gender_list = args[1].GET.getlist('gender[]')
     age_list = args[1].GET.getlist('age[]')
     size_list = args[1].GET.getlist('size[]')
     discount_list = args[1].GET.getlist('discount[]')
@@ -70,8 +71,8 @@ def product_filters(*args):
     sort_data = args[1].GET.getlist('sort[]') 
     cat_list = args[1].GET.getlist('category[]')
     neck = pocket = sleeve = rise = stretch = []
-    if len(gender) > 0:
-       card_details = card_details.filter(gender__in = gender).all().distinct()
+    if len(gender_list) > 0:
+       card_details = card_details.filter(gender__in = gender_list).all().distinct()
     if len(cat_list) > 0:
        card_details = card_details.filter(category__category__in = cat_list).all().distinct()
        if len(neck_list) > 0:
@@ -130,6 +131,21 @@ def product_filters(*args):
            continue
         value = render_to_string('other_filters.html',{'value':y,'key':x,'gender':args[2]})
         filters[x] = value  
-    ajax = render_to_string('cards.html', {'details': card_details,'gender':args[2]}) 
+    ajax = render_to_string('cards.html', {'details': card_details}) 
     return {'details':ajax,'filter':filters}
 
+
+def checker(set_nospace,splits,sets):
+        setindex = False
+        for x in set_nospace:
+          for s in splits:
+              if x.startswith(s):
+                  setindex = sets[set_nospace.index(x)]                
+        return setindex
+
+def gender_checker(gender):   
+        if gender == 'kids':
+           lookup =  Q(gender__in = ['girls','boys'])
+        else:
+           lookup =  Q(gender__iexact = gender)     
+        return lookup

@@ -1,12 +1,15 @@
+from itertools import chain
+import re
+from django.db.models import Q
 from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from . import import_fnctns
+from . import import_fnctns,context_processors
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
-from ecomapp.models import Cart, CartItem, KidsCategory, KidsDetail, KidsFashion, MenCategory, MenDetail,MenFashion, Pocket, ProductDetail, SaveItForLater, Seller,WomenCategory,WomenDetail,WomenFashion,Size,KidsAge
+from ecomapp.models import AllFashion, Brand, Category, Color, EcomCart, EcomCartItem,Pocket, ProductInfo, SaveForLater,Seller,Size,KidsAge, Sleeve
 # Create your views here.
 
 def signin(request):
@@ -50,64 +53,53 @@ def registration(request):
     return render(request,'registration.html')
 
 def womentab(request):
-    card_details = WomenFashion.objects.all()
-    pro_info = WomenDetail.objects.all()
-    context = import_fnctns.product_page(card_details,pro_info,'women')
+    card_details = AllFashion.objects.filter(gender="women").all()
+    context = import_fnctns.product_page(card_details,"women")
     return render(request,'women.html',context)
 
 def mentab(request):
-    card_details = MenFashion.objects.all()
-    pro_info = MenDetail.objects.all()
-    context = import_fnctns.product_page(card_details,pro_info,'men')
+    card_details = AllFashion.objects.filter(gender="men").all()
+    context = import_fnctns.product_page(card_details,"men")
     return render(request,'men.html',context)
 
 def kidstab(request):
-    card_details = KidsFashion.objects.all()
-    pro_info = KidsDetail.objects.all()
+    card_details = AllFashion.objects.filter(Q(gender='girls') | Q(gender='boys')).all()
     kids_age = KidsAge.objects.all()
-    context = import_fnctns.product_page(card_details,pro_info,'kids')
+    context = import_fnctns.product_page(card_details,"kids")
     context['allproducts']['age'] = kids_age
     return render(request,'kids.html',context)
 
 def filter_women(request):
-    card_details = WomenFashion.objects.all()
+    card_details = AllFashion.objects.filter(gender="women").all()
     context = import_fnctns.product_filters(card_details,request,'women')
     return JsonResponse(context)
 
 def filter_men(request):
-    card_details = MenFashion.objects.all()
+    card_details = AllFashion.objects.filter(gender="men").all()
     context = import_fnctns.product_filters(card_details,request,'men') 
     return JsonResponse(context)
 
 def filter_kids(request):
-    card_details = KidsFashion.objects.all()
+    card_details = AllFashion.objects.filter(Q(gender='girls') | Q(gender='boys')).all()
     context = import_fnctns.product_filters(card_details,request,'kids')
     return JsonResponse(context)
 
-def product_info(request,product_id):
-    products = ""
-    product_details= ""
+def product_info(request,slug):
     gotocart = sizeall = False
-    infotag = request.GET['info']
-    if infotag == 'women':
-       products = WomenFashion.objects.get(pk = product_id)
-       product_details = get_object_or_404(WomenDetail, Product__id = product_id)         
-    if infotag =='men':
-       products = MenFashion.objects.get(pk = product_id)
-       product_details = get_object_or_404(MenDetail, Product__id = product_id)
-    if infotag == 'kids':
-       products = KidsFashion.objects.get(pk = product_id)
-       product_details = get_object_or_404(KidsDetail, Product__id = product_id)
+    products = AllFashion.objects.get(slug=slug)   
+    product_details = get_object_or_404(ProductInfo, Product__slug = slug)         
     if request.user.is_authenticated:
-        cartdata = Cart.objects.get(user=request.user)
-        cartitem = CartItem.objects.filter(cart=cartdata).values_list('title',flat=True).distinct()
+        try:
+            cartdata = EcomCart.objects.get(user=request.user)
+            cartitem =  EcomCartItem.objects.filter(cart=cartdata).values_list('title',flat=True).distinct()
+        except EcomCart.DoesNotExist:
+            cartdata = cartitem = []   
         if products.title in cartitem:
             gotocart = True      
     if len(products.size.all()) > 0:
         sizeall = True
     context = {
       'details':products,
-      'gender':infotag,
       'productdetails':product_details,
       'gotocart':gotocart,
       'sizeall':sizeall,   
@@ -117,10 +109,10 @@ def product_info(request,product_id):
 def cart(request):
     context = {} 
     if request.user.is_authenticated:
-       save_for_later = SaveItForLater.objects.filter(user=request.user)
+       save_for_later = SaveForLater.objects.filter(user=request.user)
        try:
-          cartdata = Cart.objects.get(user=request.user)
-          cartitem = CartItem.objects.filter(cart=cartdata)
+          cartdata = EcomCart.objects.get(user=request.user)
+          cartitem = EcomCartItem.objects.filter(cart=cartdata)
           total_amnt = cartdata.total_amnt + cartdata.total_dscnt
           context = {
             'cart':cartdata,
@@ -128,7 +120,7 @@ def cart(request):
             'total':total_amnt,
             'saveit':save_for_later,
           }
-       except Cart.DoesNotExist:
+       except EcomCart.DoesNotExist:
          context = {
            'cart': 0,
            'saveit':save_for_later,
@@ -139,21 +131,14 @@ def cart(request):
 @login_required
 def add_to_cart(request,product_id):
     products = '';
-    infotag = request.GET['info'];
     seller = Seller.objects.get(seller=request.GET['seller'])
-    if "size[]" in request.GET:
+    if "size" in request.GET:
         size = Size.objects.get(size=request.GET['size'])
     else:
         size = None
     if request.user.is_authenticated:      
-        if infotag == 'women':
-            products = WomenFashion.objects.get(pk=product_id) 
-        if infotag == 'men':
-            products = MenFashion.objects.get(pk=product_id)
-        if infotag == 'kids':
-            products = KidsFashion.objects.get(pk=product_id)
-        
-        cart,created = Cart.objects.get_or_create(user=request.user)
+        products = AllFashion.objects.get(pk=product_id)   
+        cart,created = EcomCart.objects.get_or_create(user=request.user)
         cartitem,created = products.cartitems.get_or_create(cart=cart,seller=seller,
                        brand=products.brand,cart_image=products.card_image,
                        size=size,title=products.title)  
@@ -161,23 +146,23 @@ def add_to_cart(request,product_id):
            cartitem.quantity += 1
         cartitem.save()  
         import_fnctns.cart_update(cart)
-        saveit = SaveItForLater.objects.filter(user=request.user,image=products.card_image,
+        saveit = SaveForLater.objects.filter(user=request.user,image=products.card_image,
                 size=size,seller=seller,brand=products.brand,title=products.title)
         if saveit:
            saveit.delete()                   
-    return JsonResponse({'cart_qnty':cart.total_qty,'product':product_id,'info':infotag})
+    return JsonResponse({'cart_qnty':cart.total_qty,'product':product_id})
 
 def update_quantity(request,cart_id):
-    cart = Cart.objects.get(user=request.user)
-    cartitem = CartItem.objects.get(pk=cart_id)
+    cart = EcomCart.objects.get(user=request.user)
+    cartitem = EcomCartItem.objects.get(pk=cart_id)
     cartitem.quantity += 1
     cartitem.save()
     import_fnctns.cart_update(cart)
     return redirect('cart')
 
 def delete_quantity(request,cart_id):
-    cart = Cart.objects.get(user=request.user)
-    cartitem = CartItem.objects.get(pk=cart_id)
+    cart = EcomCart.objects.get(user=request.user)
+    cartitem = EcomCartItem.objects.get(pk=cart_id)
     cartitem.quantity -= 1
     if cartitem.quantity == 0:
        cartitem.delete()
@@ -188,43 +173,111 @@ def delete_quantity(request,cart_id):
     return redirect('cart')
 
 def remove_cart_item(request,cart_id):
-    cart = Cart.objects.get(user=request.user)
-    cartitem = CartItem.objects.get(pk=cart_id)
+    cart = EcomCart.objects.get(user=request.user)
+    cartitem = EcomCartItem.objects.get(pk=cart_id)
     cartitem.delete()
     import_fnctns.cart_update(cart)
     return redirect('cart')
 
 def save_for_later(request,save_id):
-    cart = Cart.objects.get(user=request.user)
-    cartitem =  CartItem.objects.get(pk = save_id)
-    save_later = SaveItForLater(user=request.user,image=cartitem.cart_image,
+    cart = EcomCart.objects.get(user=request.user)
+    cartitem = EcomCartItem.objects.get(pk = save_id)
+    save_later = SaveForLater(user=request.user,image=cartitem.cart_image,
         title=cartitem.title,brand=cartitem.brand,size=cartitem.size,
         seller=cartitem.seller,price=cartitem.total_price,mrp=cartitem.total_mrp,
-        qty=cartitem.quantity,object_id=cartitem.object_id,
-        content_type_id=cartitem.content_type_id)
+        qty=cartitem.quantity,all_pro=cartitem.products,)
     save_later.save() 
     cartitem.delete()
     import_fnctns.cart_update(cart)
     return redirect('cart')
 
 def remove_save_later(request,save_id):
-    save_later = SaveItForLater.objects.get(pk=save_id)
+    save_later = SaveForLater.objects.get(pk=save_id)
     save_later.delete()
     return redirect('cart')
 
 def move_to_cart(request,move_id):
-    saveit = SaveItForLater.objects.get(pk=move_id)
-    cart,created = Cart.objects.get_or_create(user=request.user)
-    cartitem,created = CartItem.objects.get_or_create(cart=cart,
+    saveit = SaveForLater.objects.get(pk=move_id)
+    cart,created = EcomCart.objects.get_or_create(user=request.user)
+    cartitem,created = EcomCartItem.objects.get_or_create(cart=cart,
         cart_image=saveit.image,size=saveit.size,
         title=saveit.title,brand=saveit.brand,total_mrp=saveit.mrp,
         seller=saveit.seller,total_price=saveit.price, 
-        quantity=saveit.qty,object_id=saveit.object_id,
-        content_type_id=saveit.content_type_id)
+        quantity=saveit.qty,products=saveit.all_pro)
     cartitem.save()
     saveit.delete()
     import_fnctns.cart_update(cart)
     return redirect('cart')
+
+def searchall(request):
+    search = request.GET['search'].lower()
+    searchType = request.GET['searchType']
+    allproducts = AllFashion.objects.all()
+    card_details = []
+    color = list(Color.objects.values_list('color',flat=True).all())
+    auto_items = context_processors.search_items(request)['automate_search'] + color                
+    auto_items = [items.lower() for items in auto_items] 
+    category = list(Category.objects.values_list('category',flat=True).all())
+    cat_nospace =[i.lower().replace('-','').replace(' ','') for i in category]
+    for_items = ["women","men","girls","boys","kids"]
+    split_s = search.split('for')
+    split_s = [i.strip() for i in split_s]   
+    cat = import_fnctns.checker(cat_nospace,split_s,category)  
+        
+    if searchType == 'AutomateSearch':    
+        if len(split_s) == 2 and any(i in split_s for i in for_items):
+            card_details = allproducts.filter(Q(category__category__istartswith=cat) & 
+                           import_fnctns.gender_checker(split_s[1])).all().distinct()
+        else:
+            card_details = allproducts.filter(Q(category__category__istartswith=search)|
+                         Q(title__iexact=search)|Q(brand__brand__iexact=search)).all().distinct()
+    elif searchType == 'ManualSearch':
+        if any([search == x for x in auto_items]):
+            if len(split_s) == 2 and any(i in split_s for i in for_items):
+                card_details = allproducts.filter(Q(category__category__istartswith=split_s[0]) & 
+                           import_fnctns.gender_checker(split_s[1])).all().distinct()
+
+            else:
+                card_details = allproducts.filter(Q(category__category__istartswith=search)|
+                             Q(title__istartswith=search)|Q(brand__brand__iexact=search)|
+                             Q(pros__Color__color__icontains=search)).all().distinct()
+        
+        elif len(search.split()) > 1 :    
+            if re.search(' t shirt| t-shirt',search) :
+               search = search.replace(' t shirt',' tshirt').replace(' t-shirt',' tshirt')
+               split_s = search.split()
+            else:   
+               split_s = search.split()    
+            split_s = [i.strip() for i in split_s]
+            sleeves = list(Sleeve.objects.values_list('sleeves',flat=True).all())
+            sleev_nospace = [i.lower().replace('-','').replace(' ','') for i in sleeves]
+            sleeve = import_fnctns.checker(sleev_nospace,split_s,sleeves)
+            cat =  import_fnctns.checker(cat_nospace,split_s,category)              
+            qs = [Q(pros__Color__color__icontains=i)|Q(brand__brand__iexact=i)|
+                 Q (pros__Sleeves__sleeves__icontains=sleeve) for i in split_s]     
+            query = qs.pop()
+            for q in qs:
+               query |= q
+               if qs.index(q) == (len(qs)-1):
+                  if cat == False:
+                    query &= Q(category__category__in=category)
+                  else:  
+                    query &= Q(category__category__istartswith=cat) 
+            card_details = allproducts.filter(query).all().distinct()     
+    if len(card_details) == 0:    
+        card_details = allproducts.filter(Q(category__category__icontains=cat)|
+                  Q (pros__Color__color__icontains=search)|Q(brand__brand__contains=search)|
+                  Q (pros__Sleeves__sleeves__icontains=search[0:3])|Q(title__istartswith=search)|
+                  Q (gender__istartswith=search)).all().distinct()    
+    context = import_fnctns.product_page(card_details,'')
+    context['search'] = search
+    return render(request,'search-page.html',context)
+
+def filter_search(request):
+    search = request.GET['search']
+    card_details = AllFashion.objects.filter(title__icontains = search).all()   
+    context = import_fnctns.product_filters(card_details,request,'')
+    return JsonResponse(context)
 
 #When querying a ForeignKey field, you 'normally' pass an instance of the model
 #like this for example,

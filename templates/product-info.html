@@ -42,13 +42,13 @@ products
                 <p class="text-danger" id="sizealert"></p>
               </div>
             {% endif %}
-            <div class="d-grid">
-              <input type="hidden" class="hiddengender" data-gender={{gender}}>
+            <div class="d-grid cartbt">
+              <!--<input type="hidden" class="hiddengender" data-gender=>-->
               <input type="hidden" class="hiddenid" data-pro_id={{details.id}}>
               {% if gotocart %}
                   <a class="gotocart btn btn-block mb-3" href="{% url 'cart' %}">GO TO CART</a>          
               {% else %}
-                  <button class="addtocart btn btn-block mb-3">ADD TO CART</button>
+                  <a class="addtocart btn btn-block mb-3" href="#">ADD TO CART</a>
               {% endif %}
               <button class="buynow btn">BUY NOW</button>
             </div>

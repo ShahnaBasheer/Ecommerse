@@ -66,6 +66,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'ecomapp.context_processors.quantity',
                 'ecomapp.context_processors.brands',
+                'ecomapp.context_processors.search_items',
+
             ],
         },
     },

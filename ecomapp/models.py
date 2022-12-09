@@ -1,24 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 import math
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericRelation
-
+from django.utils.text import slugify
+from django.urls import reverse
 # Create your models here.
 
-class WomenCategory(models.Model):
+class Category(models.Model):
    category = models.CharField(max_length=50,unique=True)
-   def __str__(self):
-      return self.category
-
-class MenCategory(models.Model):
-   category = models.CharField(max_length=50,unique=True)
-   def __str__(self):
-      return self.category
-
-class KidsCategory(models.Model):
-   category = models.CharField(max_length=50,unique=True) 
    def __str__(self):
       return self.category
 
@@ -43,17 +31,14 @@ DISCOUNT_CHOICES = [
 ] 
 
 def user_directory_path(instance,filename):  
-    if isinstance(instance,WomenFashion):
+    if instance.gender =="women":
       x = "women"
-    elif isinstance(instance,MenFashion):
+    elif instance.gender =="men":
       x = "men"
-    elif isinstance(instance,KidsFashion):
-      if instance.gender == "girls":
+    elif instance.gender =="girls":
          x = "girls"
-      else:
-         x = "boys"
     else:
-      pass
+         x = "boys"
     return '{0}/{1}/{2}'.format(x,instance.category,filename)
 
 class Material(models.Model):
@@ -104,9 +89,42 @@ class Seller(models.Model):
    def __str__(self):
       return self.seller
 
+GENDER_CHOICES = [
+   ("girls","girls"),
+   ("boys","boys"),
+   ("women","women"),
+   ("men","men"),
+]
 
-#The base class for all 4 databases
-class Cart(models.Model):
+class AllFashion(models.Model):
+   slug = models.SlugField(max_length=250,null=False, unique=True)
+   gender = models.CharField(choices=GENDER_CHOICES, max_length=50)
+   category = models.ForeignKey(Category, on_delete=models.CASCADE)
+   age = models.ManyToManyField(KidsAge,blank=True)
+   card_image = models.ImageField(upload_to=user_directory_path) 
+   title = models.CharField(max_length=60,unique=True)
+   price = models.IntegerField()
+   mrp = models.IntegerField(default=0)
+   dlvry_charges = models.CharField(max_length=100,default='FREE')
+   upload_date = models.DateTimeField(auto_now=True)
+   size = models.ManyToManyField(Size,blank=True)
+   discount = models.CharField(max_length=100,null=True,blank=True)
+   brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True,related_name="all_brands")
+   
+   def get_absolute_url(self):
+        return reverse("product_info", kwargs={"slug": self.slug})
+
+   def save(self, force_insert = False, force_update = True, using = False):
+      if not self.slug:
+            self.slug = slugify(self.title)
+      self.discount = math.floor((self.mrp - self.price)/self.mrp * 100) 
+      return super().save()
+
+   def __str__(self):
+       return self.title
+
+
+class EcomCart(models.Model):
    user = models.ForeignKey(User,on_delete=models.CASCADE)
    total_amnt = models.IntegerField(default=0)
    total_dscnt = models.IntegerField(default=0)
@@ -121,8 +139,8 @@ class Cart(models.Model):
    def __str__(self):
       return str(self.user)
 
-class CartItem(models.Model):
-   cart = models.ForeignKey(Cart,on_delete=models.CASCADE)
+class EcomCartItem(models.Model):
+   cart = models.ForeignKey(EcomCart,on_delete=models.CASCADE)
    cart_image=models.ImageField(null=True)
    title = models.CharField(max_length=60,null=True)
    quantity = models.IntegerField(default=1)
@@ -132,58 +150,13 @@ class CartItem(models.Model):
    delivery = models.CharField(max_length=30,default=0)
    total_price = models.IntegerField()
    total_mrp = models.IntegerField(default=0)
-   content_type = models.ForeignKey(ContentType,on_delete=models.CASCADE)
-   object_id = models.PositiveIntegerField()
-   content_object = GenericForeignKey('content_type', 'object_id')
-   
+   products = models.ForeignKey(AllFashion,on_delete=models.CASCADE,related_name='cartitems')
+
    def save(self, force_insert = True, force_update = False, using = False):
-      self.total_price = self.quantity * self.content_object.price
-      self.total_mrp = self.quantity * self.content_object.mrp
-      self.delivery = self.content_object.dlvry_charges
+      self.total_price = self.quantity * self.products.price
+      self.total_mrp = self.quantity * self.products.mrp
+      self.delivery = self.products.dlvry_charges
       return super().save()
-        
-class iambase(models.Model):
-   card_image = models.ImageField(upload_to=user_directory_path) 
-   title = models.CharField(max_length=60)
-   price = models.IntegerField()
-   mrp = models.IntegerField(default=0)
-   dlvry_charges = models.CharField(max_length=100,default='FREE')
-   upload_date = models.DateTimeField(auto_now=True)
-   size = models.ManyToManyField(Size,blank=True)
-   discount = models.CharField(max_length=100,null=True,blank=True)
-   cartitems = GenericRelation(CartItem,related_query_name='cartitems') 
-
-   def save(self, force_insert = False, force_update = True, using = False):
-      self.discount = math.floor((self.mrp - self.price)/self.mrp * 100)
-      return super().save()
-      
-   class Meta:
-     abstract = True
-
-GENDER_CHOICES = [
-   ("Girls","Girls"),
-   ("Boys","Boys"),
-]
-
-class WomenFashion(iambase):
-    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True,related_name="women_brands")
-    category = models.ForeignKey(WomenCategory, on_delete=models.CASCADE)   
-    def __str__(self):
-       return self.title
-
-class MenFashion(iambase):
-    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True,related_name="men_brands")
-    category = models.ForeignKey(MenCategory, on_delete=models.CASCADE)
-    def __str__(self):
-       return self.title
-
-class KidsFashion(iambase):
-    gender = models.CharField(choices=GENDER_CHOICES, max_length=50)
-    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True,related_name="kids_brands")
-    category = models.ForeignKey(KidsCategory, on_delete=models.CASCADE)
-    age = models.ManyToManyField(KidsAge)
-    def __str__(self):
-       return self.title
 
 RISE_CHOICE= [
       ('Mid Waist','Mid Waist'),
@@ -191,7 +164,9 @@ RISE_CHOICE= [
       ('High Waist','High Waist'),
 ]
 
-class ProductDetail(models.Model):
+class ProductInfo(models.Model):
+   Product = models.OneToOneField(AllFashion,on_delete=models.CASCADE,related_name='pros')
+   Type = models.ForeignKey(Category,max_length=50,on_delete=models.CASCADE)
    Material = models.ForeignKey(Material,max_length=50,null=True,on_delete=models.CASCADE,verbose_name="Material")
    Pattern = models.ForeignKey(Pattern,max_length=50,null=True,on_delete=models.CASCADE,verbose_name="Pattern")
    Pocket = models.ForeignKey(Pocket,max_length=50,null=True,blank=True,on_delete=models.CASCADE,verbose_name="Pocket")
@@ -211,36 +186,23 @@ class ProductDetail(models.Model):
    def get_fields(self):
       val = []
       for f in self._meta.get_fields(): 
-         if  getattr(self,f.name)!=None and f.name not in ('productdetail_ptr','Product',
+         if  getattr(self,f.name)!=None and f.name not in ('Product',
             'id','Type','Descriptions','Sellers','Manufacture','Country','Return'):
             val.append((f.verbose_name,(getattr(self, f.name))))
       return val 
       #getattr(self,f.name)!=None and f.name!='productdetail_ptr' and f.name!='Product' and f.name!='id' :
 
-class WomenDetail(ProductDetail):
-   Product = models.OneToOneField(WomenFashion,on_delete=models.CASCADE,related_name='pros')
-   Type = models.ForeignKey(WomenCategory,max_length=50,on_delete=models.CASCADE)
-   
 
-class MenDetail(ProductDetail):
-   Product = models.OneToOneField(MenFashion,on_delete=models.CASCADE,related_name='pros')
-   Type = models.ForeignKey(MenCategory,max_length=50,on_delete=models.CASCADE)
-   
-class KidsDetail(ProductDetail):
-   Product = models.OneToOneField(KidsFashion,on_delete=models.CASCADE,related_name='pros')
-   Type = models.ForeignKey(KidsCategory,max_length=50,on_delete=models.CASCADE)
-
-class SaveItForLater(models.Model):
-   user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+class SaveForLater(models.Model):
+  
+   user = models.ForeignKey(User,on_delete=models.CASCADE)
    image=models.ImageField(null=True)
    title = models.CharField(max_length=60,null=True)
    size = models.ForeignKey(Size,on_delete=models.CASCADE,null=True,blank=True)
-   brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True)
-   seller = models.ForeignKey(Seller,on_delete=models.CASCADE,null=True)
+   brand = models.ForeignKey(Brand,on_delete=models.CASCADE)
+   seller = models.ForeignKey(Seller,on_delete=models.CASCADE)
    qty = models.IntegerField(default=1)
    price = models.IntegerField()
    mrp = models.IntegerField(default=0)
-   content_type = models.ForeignKey(ContentType,on_delete=models.CASCADE)
-   object_id = models.PositiveIntegerField()
-   content_object = GenericForeignKey('content_type', 'object_id')
-   
+   all_pro = models.ForeignKey(AllFashion,on_delete=models.CASCADE)
+ 

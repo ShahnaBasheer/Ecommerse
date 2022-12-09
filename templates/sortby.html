@@ -1,6 +1,6 @@
 <div class="container my-5">
   <div class="ruler">
-     <h3>{{ heading }}</h3>
+     <h3>{{ heading }} {{search}}</h3>
       <div class="cover">
          <h5 id="clicksort">
             <i class="fa-solid fa-arrow-down-wide-short"></i> Sort By
@@ -10,32 +10,32 @@
       <div id="sortby" class="p-3">
          <div class="form-check pb-2">
            <input type="radio" class="form-check-input" data-filter="sort" name="sort"
-              data-gender={{heading}} id="radio1" value="popularity" checked>
+              data-gender="{{details.gender}}" id="radio1" value="popularity" checked>
            <label class="form-check-label" for="radio1">Popularity</label>
          </div>
          <div class="form-check pb-2">
            <input type="radio" class="form-check-input" data-filter="sort" name="sort"
-              data-gender={{heading}} id="radio2" value="price_asc">
+              data-gender="{{details.gender}}" id="radio2" value="price_asc">
            <label class="form-check-label" for="radio2">Price Low To High</label>
          </div>
          <div class="form-check pb-2">
            <input type="radio" class="form-check-input" data-filter="sort" name="sort"
-              data-gender={{heading}} id="radio3" value="price_desc">
+              data-gender="{{details.gender}}" id="radio3" value="price_desc">
            <label class="form-check-label" for="radio3">Price High To Low</label>
          </div>
          <div class="form-check pb-2">
            <input type="radio" class="form-check-input" data-filter="sort" name="sort"
-              data-gender={{heading}} id="radio4" value="newest">
+              data-gender="{{details.gender}}" id="radio4" value="newest">
            <label class="form-check-label" for="radio4">New Arrivals</label>
          </div>
          <div class="form-check pb-2">
            <input type="radio" class="form-check-input" data-filter="sort" name="sort"
-              data-gender={{heading}} id="radio5" value="disc_desc">
+              data-gender="{{details.gender}}" id="radio5" value="disc_desc">
            <label class="form-check-label" for="radio5">Discount High To Low</label>
          </div>
          <div class="form-check">
           <input type="radio" class="form-check-input" data-filter="sort" name="sort"
-              data-gender={{heading}} id="radio6" value="delivery">
+              data-gender="{{details.gender}}" id="radio6" value="delivery">
           <label class="form-check-label" for="radio6">Free Delivery</label>
         </div>
     </div>   

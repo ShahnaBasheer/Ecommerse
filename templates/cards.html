@@ -3,12 +3,12 @@
      {% for x in details %}
      <div class="col-6 col-md-4">
         <div class="card mb-3">
-           <a href="{% url 'product_info' x.id %}?info={{gender}}">
+           <a href="{% url 'product_info' x.slug %}">
               <img src={{x.card_image.url}} class="card-img-top img-fluid" alt="images">
            </a>  
            <div class="card-body">
               <h6>{{x.brand.brand}}</h6>
-              <p class="text-secondary text-capitalize">{{x.title}}</p>
+              <p class="text-secondary text-capitalize card-title">{{x.title}}</p>
               <p class="fs-6 fw-bold">₹{{x.price}}
                <span class="text-decoration-line-through ms-2 text-secondary">
                   {{x.mrp}}</span>

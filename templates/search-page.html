@@ -1,0 +1,41 @@
+{% extends 'parent.html' %}
+{% load static %}
+
+{% block newcss %}
+   <link rel="stylesheet" href="{% static 'css/products.css' %}"> 
+{% endblock %}
+
+
+{% block title %}
+Shop Your Favourite Fashions
+{% endblock %}
+
+{% block categories %}
+   {% include 'sortby.html' with heading="" %}
+
+   <!-- Products-->
+   <div class="mx-4 my-5 searchpage">
+    <div class="row">
+       <div class="col-md-3 filterscontainer">
+          <div class="filters">
+             <h5>Filters</h5>
+
+            <div class="all_filters">
+             {% for key,value in allproducts.items %}
+              <div id="{{key}}box">
+                 {% include 'other_filters.html' %}
+              </div>
+            {% endfor %}     
+            </div> 
+            <input type="hidden" id="searchvalue" value="{{search}}">
+          </div>
+       </div>  
+       
+       <!-- All products images-->
+       <div class="col-md-9 products">
+         {% include 'cards.html' %} 
+       </div>
+    </div>
+ </div>
+
+{% endblock %}

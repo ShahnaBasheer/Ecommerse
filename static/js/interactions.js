@@ -7,7 +7,8 @@ $(document).ready(function(){
    $(document).on('click','.filter-radio,.filter-checkbox,#sortby input', function(){   
         let _filterObj = {};
         let _filterGender = $(this).data('gender');
-
+          _filterObj['search'] = $('#searchvalue').val()
+        console.log(_filterObj)
         function keyvalue(){
           $(".filter-radio,.filter-checkbox,#sortby input").each(function(index,ele){
              let _filterKey = $(this).data('filter');
@@ -17,7 +18,8 @@ $(document).ready(function(){
          }
          keyvalue();
          $.ajax({
-            url:'/' + _filterGender + '/' + 'filter_data',
+            type:'GET',
+            url:'filter_data',
             data: _filterObj,
             dataType:'json',
             success:function(response){
@@ -36,19 +38,24 @@ $(document).ready(function(){
                $("#sleevebox").html(response.filter.sleeve);  
                $("#risebox").html(response.filter.rise);
                $("#stretchablebox").html(response.filter.stretchable);
-               $(".all_filters input").attr("data-gender",response.gender);
-                          
+               $(".all_filters input").attr("data-gender",response.gender);                          
             }
                
          });  
    });   
    $("input#brandsearch").keyup(function(){
-      let li = $(".brand li a");
-      let inputvalue = $("#brandsearch").val().toLowerCase()
-      li.filter(function() {
+      let inputvalue = $(this).val().toLowerCase();
+      $(".brand li a").filter(function() {
          $(this).toggle($(this).text().toLowerCase().startsWith(inputvalue))
        });
    });
+   $(".searchall input").keyup(function(){
+      let inputvalue = $(this).val().toLowerCase();
+      $(".searchmenu li a").filter(function() {
+         $(this).toggle($(this).text().toLowerCase().replace('-',"").indexOf(inputvalue)>-1)
+       });
+   });
+
 });
      
   

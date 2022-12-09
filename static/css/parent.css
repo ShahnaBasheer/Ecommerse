@@ -49,6 +49,19 @@ ul.brand.dropdown-menu input {
   font-size: 15px;
   padding:4px;
 }
+.searchall,.searchmenu{
+  width:350px;
+  }
+.searchmenu{
+  height:250px;
+  overflow:hidden;
+}
+.searchmenu li a{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
 .homecategory{
 background-color: rgb(214, 237, 241);  
 }

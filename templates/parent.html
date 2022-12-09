@@ -47,7 +47,28 @@
                         {% endfor %}
                      </ul>
                  </li>
+                 
               </ul>
+            </div>
+            <div class="searchall dropdown me-5">
+               <form method="GET" action="{% url 'search_all' %}"> 
+                  <div class="input-group input-group-sm">
+                    <input type="search" class="form-control dropdown-toggle" placeholder="Search your products.."
+                        id="psearch SearchDrop" name="search" data-bs-toggle="dropdown" aria-label="Search your products.." 
+                        aria-describedby="button-addon2" autocomplete="off">
+                    <input type="hidden" name="searchType" value="ManualSearch">
+                    <button class="btn btn-primary" type="submit" id="button-addon2">
+                       <i class="fas fa-search"></i>
+                    </button>
+                    <ul class="searchmenu dropdown-menu" aria-labelledby="SearchDrop">
+                     {% for item in automate_search %}
+                       <li><a class="dropdown-item" 
+                        href="{% url 'search_all' %}?search={{item}}&searchType=AutomateSearch">{{item}}</a></li>
+                     {% endfor %}
+                  </ul>
+                  </div>
+                  
+               </form>
             </div>
             <div class="dropdown">
                <a class="text-white userlogin dropdown-toggle pe-4" href="" 

@@ -8,7 +8,6 @@ $(document).ready(function(){
 
   $(".addtocart").click(function(){
     let size = $('.selectedsize').data('size');
-    let gender = $('.hiddengender').data('gender');
     let pro_id = $('.hiddenid').data('pro_id');
     let seller = false;
 
@@ -17,11 +16,9 @@ $(document).ready(function(){
     }else{
       seller = $('.seller').text();
     }
-    console.log("clicked")
-    console.log(seller)
-    console.log(sizetag.length)
+  
     if((sizetag.hasClass('selectedsize')||sizetag.length==0) && seller){   
-        let product={'info':gender,'size':size,'seller':seller}
+        let product={'size':size,'seller':seller}
         $.ajax({
           url:'/add_to_cart/' + pro_id,
           data: product,
@@ -30,6 +27,9 @@ $(document).ready(function(){
             $('.cart-qnty').text(response.cart_qnty);
           } 
         });
+    $("a.addtocart").remove()  
+    $("div.cartbt input").after("<a class='gotocart btn btn-block mb-3' href='/cart'>GO TO CART</a>")
+    
     }else{
         if(!sizetag.hasClass('selectedsize')){
           $('#sizealert').text("please select size to proceed");
