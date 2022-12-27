@@ -99,7 +99,7 @@ GENDER_CHOICES = [
 class AllFashion(models.Model):
    slug = models.SlugField(max_length=250,null=False, unique=True)
    gender = models.CharField(choices=GENDER_CHOICES, max_length=50)
-   category = models.ForeignKey(Category, on_delete=models.CASCADE)
+   category = models.ForeignKey(Category, on_delete=models.CASCADE,related_name='types')
    age = models.ManyToManyField(KidsAge,blank=True)
    card_image = models.ImageField(upload_to=user_directory_path) 
    title = models.CharField(max_length=60,unique=True)
@@ -194,7 +194,6 @@ class ProductInfo(models.Model):
 
 
 class SaveForLater(models.Model):
-  
    user = models.ForeignKey(User,on_delete=models.CASCADE)
    image=models.ImageField(null=True)
    title = models.CharField(max_length=60,null=True)

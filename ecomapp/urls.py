@@ -13,7 +13,9 @@ urlpatterns = [
     path('women/filter_data',views.filter_women,name="women_filter"),
     path('men/filter_data',views.filter_men,name="men_filter"),
     path('kids/filter_data',views.filter_kids,name="kids_filter"),
-    path('<slug:slug>',views.product_info,name="product_info"),
+    path('all-brands/',views.all_brands,name="all_brands"),
+    path('all-brands/filter_data',views.filter_brands,name="filter_brands"),
+    path('pro/<slug:slug>',views.product_info,name="product_info"),
     path('cart/',views.cart,name="cart"),
     path('add_to_cart/<product_id>',views.add_to_cart,name="addtocart"),
     path('update_quantity/<cart_id>',views.update_quantity,name="updateqty"),
@@ -24,4 +26,5 @@ urlpatterns = [
     path('move_to_cart/<move_id>',views.move_to_cart,name="move_to_cart"),
     path('search-all-category/',views.searchall,name="search_all"),
     path('search-all-category/filter_data',views.filter_search,name="search_filter"),
+    
 ]

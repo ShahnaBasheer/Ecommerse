@@ -19,16 +19,22 @@
     <div class="py-5 homecategory">
       <div class="row w-100 text-center">
         <div class="col">
-           <img src="{% static 'images/home4.jpg'%}" class="rounded-circle img-fluid" alt="women" width="200" height="200">
-           <p>Women</p>
+          <a href="{% url 'womenpage'%}" class="text-decoration-none text-dark">
+            <img src="{% static 'images/home4.jpg'%}" class="rounded-circle img-fluid" alt="women" width="200" height="200">
+            <p>Women</p>
+          </a>
         </div>
         <div class="col">
-          <img src="{% static 'images/home2.jpg'%}" class="rounded-circle img-fluid" alt="men" width="200" height="200">
-          <p>Men</p>
+          <a href="{% url 'menpage'%}" class="text-decoration-none text-dark">
+            <img src="{% static 'images/home2.jpg'%}" class="rounded-circle img-fluid" alt="men" width="200" height="200">
+            <p>Men</p>
+          </a>
         </div>
         <div class="col">
-          <img src="{% static 'images/kids.jpg'%}" class="rounded-circle img-fluid" alt="kids" width="200" height="200">
-          <p>Kids</p>
+          <a href="{% url 'kidspage'%}" class="text-decoration-none text-dark">
+            <img src="{% static 'images/kids.jpg'%}" class="rounded-circle img-fluid" alt="kids" width="200" height="200">
+            <p>Kids</p>
+          <a>
         </div> 
       </div>  
     </div>

@@ -1,15 +1,16 @@
 from itertools import chain
 import re
+from django.db.models import Count,F
 from django.db.models import Q
 from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from . import import_fnctns,context_processors
+from . import import_fnctns as fncs,context_processors
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
-from ecomapp.models import AllFashion, Brand, Category, Color, EcomCart, EcomCartItem,Pocket, ProductInfo, SaveForLater,Seller,Size,KidsAge, Sleeve
+from ecomapp.models import AllFashion, Category, Color, EcomCart, EcomCartItem,Pocket, ProductInfo, SaveForLater,Seller,Size,KidsAge, Sleeve
 # Create your views here.
 
 def signin(request):
@@ -54,34 +55,34 @@ def registration(request):
 
 def womentab(request):
     card_details = AllFashion.objects.filter(gender="women").all()
-    context = import_fnctns.product_page(card_details,"women")
+    context = fncs.product_page(card_details,"women")
     return render(request,'women.html',context)
 
 def mentab(request):
     card_details = AllFashion.objects.filter(gender="men").all()
-    context = import_fnctns.product_page(card_details,"men")
+    context = fncs.product_page(card_details,"men")
     return render(request,'men.html',context)
 
 def kidstab(request):
     card_details = AllFashion.objects.filter(Q(gender='girls') | Q(gender='boys')).all()
-    kids_age = KidsAge.objects.all()
-    context = import_fnctns.product_page(card_details,"kids")
+    kids_age = card_details.values(pro=F('age__age')).annotate(count=Count('age'))
+    context = fncs.product_page(card_details,"kids")
     context['allproducts']['age'] = kids_age
     return render(request,'kids.html',context)
 
 def filter_women(request):
     card_details = AllFashion.objects.filter(gender="women").all()
-    context = import_fnctns.product_filters(card_details,request,'women')
+    context = fncs.product_filters(card_details,request,'women')
     return JsonResponse(context)
 
 def filter_men(request):
     card_details = AllFashion.objects.filter(gender="men").all()
-    context = import_fnctns.product_filters(card_details,request,'men') 
+    context = fncs.product_filters(card_details,request,'men') 
     return JsonResponse(context)
 
 def filter_kids(request):
     card_details = AllFashion.objects.filter(Q(gender='girls') | Q(gender='boys')).all()
-    context = import_fnctns.product_filters(card_details,request,'kids')
+    context = fncs.product_filters(card_details,request,'kids')
     return JsonResponse(context)
 
 def product_info(request,slug):
@@ -145,7 +146,7 @@ def add_to_cart(request,product_id):
         if not created:
            cartitem.quantity += 1
         cartitem.save()  
-        import_fnctns.cart_update(cart)
+        fncs.cart_update(cart)
         saveit = SaveForLater.objects.filter(user=request.user,image=products.card_image,
                 size=size,seller=seller,brand=products.brand,title=products.title)
         if saveit:
@@ -157,7 +158,7 @@ def update_quantity(request,cart_id):
     cartitem = EcomCartItem.objects.get(pk=cart_id)
     cartitem.quantity += 1
     cartitem.save()
-    import_fnctns.cart_update(cart)
+    fncs.cart_update(cart)
     return redirect('cart')
 
 def delete_quantity(request,cart_id):
@@ -166,17 +167,17 @@ def delete_quantity(request,cart_id):
     cartitem.quantity -= 1
     if cartitem.quantity == 0:
        cartitem.delete()
-       import_fnctns.cart_update(cart)
+       fncs.cart_update(cart)
     else:
        cartitem.save()
-       import_fnctns.cart_update(cart)
+       fncs.cart_update(cart)
     return redirect('cart')
 
 def remove_cart_item(request,cart_id):
     cart = EcomCart.objects.get(user=request.user)
     cartitem = EcomCartItem.objects.get(pk=cart_id)
     cartitem.delete()
-    import_fnctns.cart_update(cart)
+    fncs.cart_update(cart)
     return redirect('cart')
 
 def save_for_later(request,save_id):
@@ -188,7 +189,7 @@ def save_for_later(request,save_id):
         qty=cartitem.quantity,all_pro=cartitem.products,)
     save_later.save() 
     cartitem.delete()
-    import_fnctns.cart_update(cart)
+    fncs.cart_update(cart)
     return redirect('cart')
 
 def remove_save_later(request,save_id):
@@ -206,14 +207,14 @@ def move_to_cart(request,move_id):
         quantity=saveit.qty,products=saveit.all_pro)
     cartitem.save()
     saveit.delete()
-    import_fnctns.cart_update(cart)
+    fncs.cart_update(cart)
     return redirect('cart')
 
 def searchall(request):
-    search = request.GET['search'].lower()
+    search = request.GET['search'].lower().strip()
     searchType = request.GET['searchType']
     allproducts = AllFashion.objects.all()
-    card_details = []
+    card_details = False
     color = list(Color.objects.values_list('color',flat=True).all())
     auto_items = context_processors.search_items(request)['automate_search'] + color                
     auto_items = [items.lower() for items in auto_items] 
@@ -222,63 +223,151 @@ def searchall(request):
     for_items = ["women","men","girls","boys","kids"]
     split_s = search.split('for')
     split_s = [i.strip() for i in split_s]   
-    cat = import_fnctns.checker(cat_nospace,split_s,category)  
-        
+    cat = fncs.checker(cat_nospace,split_s,category)  
+    
     if searchType == 'AutomateSearch':    
-        if len(split_s) == 2 and any(i in split_s for i in for_items):
+        if len(split_s) == 2 and any(i in split_s for i in for_items):  
             card_details = allproducts.filter(Q(category__category__istartswith=cat) & 
-                           import_fnctns.gender_checker(split_s[1])).all().distinct()
+                           fncs.gender_checker(split_s[1])).all().distinct()
+            
         else:
             card_details = allproducts.filter(Q(category__category__istartswith=search)|
-                         Q(title__iexact=search)|Q(brand__brand__iexact=search)).all().distinct()
+                         Q(title__iexact=search)|Q(brand__brand__iexact=search)).all().distinct()   
+    
     elif searchType == 'ManualSearch':
         if any([search == x for x in auto_items]):
             if len(split_s) == 2 and any(i in split_s for i in for_items):
-                card_details = allproducts.filter(Q(category__category__istartswith=split_s[0]) & 
-                           import_fnctns.gender_checker(split_s[1])).all().distinct()
-
+                card_details = allproducts.filter(Q(category__category__istartswith=cat) & 
+                           fncs.gender_checker(split_s[1])).all().distinct()
+                
             else:
                 card_details = allproducts.filter(Q(category__category__istartswith=search)|
                              Q(title__istartswith=search)|Q(brand__brand__iexact=search)|
                              Q(pros__Color__color__icontains=search)).all().distinct()
-        
+                  
         elif len(search.split()) > 1 :    
-            if re.search(' t shirt| t-shirt',search) :
-               search = search.replace(' t shirt',' tshirt').replace(' t-shirt',' tshirt')
+            if re.search(' t shirt|t-shirt|t shirt',search) :
+               search = search.replace('t shirt',' tshirt').replace('t-shirt',' tshirt')
                split_s = search.split()
             else:   
-               split_s = search.split()    
+               split_s = search.split() 
             split_s = [i.strip() for i in split_s]
             sleeves = list(Sleeve.objects.values_list('sleeves',flat=True).all())
             sleev_nospace = [i.lower().replace('-','').replace(' ','') for i in sleeves]
-            sleeve = import_fnctns.checker(sleev_nospace,split_s,sleeves)
-            cat =  import_fnctns.checker(cat_nospace,split_s,category)              
-            qs = [Q(pros__Color__color__icontains=i)|Q(brand__brand__iexact=i)|
-                 Q (pros__Sleeves__sleeves__icontains=sleeve) for i in split_s]     
+            sleeve = fncs.checker(sleev_nospace,split_s,sleeves)
+            cat =  fncs.checker(cat_nospace,split_s,category)                  
+            qs = [Q(pros__Color__color__icontains=i)|Q(brand__brand__iexact=i)for i in split_s] 
             query = qs.pop()
             for q in qs:
-               query |= q
-               if qs.index(q) == (len(qs)-1):
-                  if cat == False:
-                    query &= Q(category__category__in=category)
-                  else:  
-                    query &= Q(category__category__istartswith=cat) 
-            card_details = allproducts.filter(query).all().distinct()     
-    if len(card_details) == 0:    
-        card_details = allproducts.filter(Q(category__category__icontains=cat)|
+                query |= q   
+            if len(allproducts.filter(query).all()) == 0:
+                query = Q(pros__Sleeves__sleeves__icontains=sleeve)
+                card_details = allproducts.filter(query & Q(category__category__istartswith=cat) &
+                 fncs.gender_checker(split_s)).all().distinct()
+            else:
+                card_details = allproducts.filter(query & Q(category__category__istartswith=cat) &
+                 fncs.gender_checker(split_s)).all().distinct()
+             
+    if card_details == False: 
+        if re.search(' t shirt|t-shirt|t shirt|tshirt',search) :
+            search = search.replace('t shirt','t-shirt').replace('tshirt','t-shirt') 
+        card_details = allproducts.filter(Q(category__category__istartswith=search)|
                   Q (pros__Color__color__icontains=search)|Q(brand__brand__contains=search)|
                   Q (pros__Sleeves__sleeves__icontains=search[0:3])|Q(title__istartswith=search)|
-                  Q (gender__istartswith=search)).all().distinct()    
-    context = import_fnctns.product_page(card_details,'')
+                  Q (gender__istartswith=search)).all().distinct()
+                
+    elif len(card_details) == 0:
+        card_details = allproducts.filter(Q(title__icontains=search))
+                
+    context = fncs.product_page(card_details,'')
     context['search'] = search
+    context['search_Type'] = searchType
     return render(request,'search-page.html',context)
 
 def filter_search(request):
-    search = request.GET['search']
-    card_details = AllFashion.objects.filter(title__icontains = search).all()   
-    context = import_fnctns.product_filters(card_details,request,'')
+    search = request.GET['search'].lower().strip()
+    searchType = request.GET['searchType']
+    allproducts = AllFashion.objects.all()
+    card_details = False
+    color = list(Color.objects.values_list('color',flat=True).all())
+    auto_items = context_processors.search_items(request)['automate_search'] + color                
+    auto_items = [items.lower() for items in auto_items] 
+    category = list(Category.objects.values_list('category',flat=True).all())
+    cat_nospace =[i.lower().replace('-','').replace(' ','') for i in category]
+    for_items = ["women","men","girls","boys","kids"]
+    split_s = search.split('for')
+    split_s = [i.strip() for i in split_s]   
+    cat = fncs.checker(cat_nospace,split_s,category)  
+    
+    if searchType == 'AutomateSearch':    
+        if len(split_s) == 2 and any(i in split_s for i in for_items):  
+            card_details = allproducts.filter(Q(category__category__istartswith=cat) & 
+                           fncs.gender_checker(split_s[1])).all().distinct()
+            
+        else:
+            card_details = allproducts.filter(Q(category__category__istartswith=search)|
+                         Q(title__iexact=search)|Q(brand__brand__iexact=search)).all().distinct()   
+    
+    elif searchType == 'ManualSearch':
+        if any([search == x for x in auto_items]):
+            if len(split_s) == 2 and any(i in split_s for i in for_items):
+                card_details = allproducts.filter(Q(category__category__istartswith=cat) & 
+                           fncs.gender_checker(split_s[1])).all().distinct()
+                
+            else:
+                card_details = allproducts.filter(Q(category__category__istartswith=search)|
+                             Q(title__istartswith=search)|Q(brand__brand__iexact=search)|
+                             Q(pros__Color__color__icontains=search)).all().distinct()
+                  
+        elif len(search.split()) > 1 :    
+            if re.search(' t shirt|t-shirt|t shirt',search) :
+               search = search.replace('t shirt',' tshirt').replace('t-shirt',' tshirt')
+               split_s = search.split()
+            else:   
+               split_s = search.split() 
+            split_s = [i.strip() for i in split_s]
+            sleeves = list(Sleeve.objects.values_list('sleeves',flat=True).all())
+            sleev_nospace = [i.lower().replace('-','').replace(' ','') for i in sleeves]
+            sleeve = fncs.checker(sleev_nospace,split_s,sleeves)
+            cat =  fncs.checker(cat_nospace,split_s,category)                  
+            qs = [Q(pros__Color__color__icontains=i)|Q(brand__brand__iexact=i)for i in split_s] 
+            query = qs.pop()
+            for q in qs:
+                query |= q   
+            if len(allproducts.filter(query).all()) == 0:
+                query = Q(pros__Sleeves__sleeves__icontains=sleeve)
+                card_details = allproducts.filter(query & Q(category__category__istartswith=cat) &
+                 fncs.gender_checker(split_s)).all().distinct()
+            else:
+                card_details = allproducts.filter(query & Q(category__category__istartswith=cat) &
+                 fncs.gender_checker(split_s)).all().distinct()
+             
+    if card_details == False: 
+        if re.search(' t shirt|t-shirt|t shirt|tshirt',search) :
+            searchs = search.replace('t shirt','t-shirt').replace('tshirt','t-shirt') 
+        card_details = allproducts.filter(Q(category__category__istartswith=searchs)|
+                  Q (pros__Color__color__icontains=searchs)|Q(brand__brand__contains=search)|
+                  Q (pros__Sleeves__sleeves__icontains=searchs[0:3])|Q(title__istartswith=searchs)|
+                  Q (gender__istartswith=searchs)).all().distinct()
+                
+    elif len(card_details) == 0:
+        card_details = allproducts.filter(Q(title__icontains=search))
+    context = fncs.product_filters(card_details,request,'')
     return JsonResponse(context)
 
+def all_brands(request):
+    brand_search = request.GET['brand']
+    card_details = AllFashion.objects.filter(brand__brand = brand_search).all()
+    context = fncs.product_page(card_details,'')
+    context['allproducts'].pop('brand')
+    context['search'] = brand_search
+    return render(request,"brands.html",context)
+
+def filter_brands(request):
+    brand_search = request.GET['slct_brand']
+    card_details = AllFashion.objects.filter(brand__brand=brand_search).all()
+    context = fncs.product_filters(card_details,request,'')  
+    return JsonResponse(context)
 #When querying a ForeignKey field, you 'normally' pass an instance of the model
 #like this for example,
 # x = MenCategory.objects.get(men=proname) 

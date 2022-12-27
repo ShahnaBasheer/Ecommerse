@@ -1,21 +1,19 @@
+import json
 from . import models
 from .models import EcomCartItem
-from django.db.models import Sum
 from django.template.loader import render_to_string
-from django.db.models import Q
+from django.db.models import Q,Count,Sum,F
 
 def product_page(*args):
-    size = args[0].values_list('size__size',flat=True).exclude(size__size=None).distinct().order_by('-size__id')
-    brand = args[0].values_list('brand__brand',flat=True).exclude(brand__brand=None).distinct()
-    color = args[0].values_list('pros__Color__color',flat=True).exclude(pros__Color__color=None).distinct()
-    material =args[0].values_list('pros__Material__material',flat=True).exclude(pros__Material__material=None).distinct()
-    pattern = args[0].values_list('pros__Pattern__pattern',flat=True).exclude(pros__Pattern__pattern=None).distinct()
-    occasion = args[0].values_list('pros__Occasion__occasion',flat=True).exclude(pros__Occasion__occasion=None).distinct()
+    size = args[0].values(pro = F('size__size')).exclude(size__size=None).order_by('size__id').annotate(count = Count('size'))
+    brand = args[0].values(pro = F('brand__brand')).annotate(count = Count('brand'))
+    color = args[0].values(pro = F('pros__Color__color')).annotate(count=Count('pros__Color'))
+    material =args[0].values(pro = F('pros__Material__material')).annotate(count=Count('pros__Material'))
+    pattern = args[0].values(pro = F('pros__Pattern__pattern')).annotate(count=Count('pros__Pattern'))
+    occasion = args[0].values(pro = F('pros__Occasion__occasion')).annotate(count=Count('pros__Occasion'))
     discounts = models.DISCOUNT_CHOICES
     neck = pocket = sleeve = rise = stretch = [] 
-    products = args[0].values_list('category__category',flat=True)\
-               .exclude(category__category=None).distinct()
-    #g_count = WomenFashion.objects.values('category__women').annotate(count = Count('id'))
+    products = args[0].values(pro = F('category__category')).annotate(count = Count('category'))           
     context = {
       'allproducts':{'category':products,'age':None,'brand':brand,'discount':discounts,
                    'size':size,'color':color,'material':material,'pattern':pattern,
@@ -53,7 +51,7 @@ def cart_update(cart):
       cart.save()
 
 def product_filters(*args):
-    card_details = args[0]
+    card_details = procs = args[0]
     gender_list = args[1].GET.getlist('gender[]')
     age_list = args[1].GET.getlist('age[]')
     size_list = args[1].GET.getlist('size[]')
@@ -70,6 +68,7 @@ def product_filters(*args):
     stretch_list = args[1].GET.getlist('strechable[]')
     sort_data = args[1].GET.getlist('sort[]') 
     cat_list = args[1].GET.getlist('category[]')
+    checked_lists = args[1].GET['_checked']
     neck = pocket = sleeve = rise = stretch = []
     if len(gender_list) > 0:
        card_details = card_details.filter(gender__in = gender_list).all().distinct()
@@ -85,67 +84,91 @@ def product_filters(*args):
            card_details = card_details.filter(pros__Rise__in = rise_list).all().distinct()
        if len(stretch_list) > 0:
            card_details = card_details.filter(pros__Stretchable__in = stretch_list).all().distinct()       
-       neck = card_details.values_list('pros__Neck__neck',flat=True).exclude(pros__Neck__neck=None).distinct()
-       pocket = card_details.values_list('pros__Pocket__pocket',flat=True).exclude(pros__Pocket__pocket=None).distinct()
-       sleeve = card_details.values_list('pros__Sleeves__sleeves',flat=True).exclude(pros__Sleeves__sleeves=None).distinct()
-       rise = card_details.values_list('pros__Rise',flat=True).exclude(pros__Rise=None).distinct()
-       stretch = card_details.values_list('pros__Stretchable',flat=True).exclude(pros__Stretchable=None).distinct()
+       neck = card_details.values(pro = F('pros__Neck__neck')).exclude(pros__Neck__neck=None).annotate(count = Count('pros__Neck'))
+       pocket = card_details.values(pro = F('pros__Pocket__pocket')).exclude(pros__Pocket__pocket=None).annotate(count = Count('pros__Pocket'))
+       sleeve = card_details.values(pro = F('pros__Sleeves__sleeves')).exclude(pros__Sleeves__sleeves=None).annotate(count = Count('pros__Sleeves'))
+       rise = card_details.values(pro = F('pros__Rise')).exclude(pros__Rise=None).annotate(count = Count('pros__Rise'))
+       stretch = card_details.values(pro = F('pros__Stretchable')).exclude(pros__Stretchable=None).annotate(count = Count('pros__Stretchable'))
     if len(discount_list) > 0:
         if len(discount_list) == 1:
            range_value = (int(discount_list[0]),99)
         else:      
            range_value = (min(list(map(int,discount_list))),99)
         card_details = card_details.filter(discount__range = range_value).all().distinct()
-    if len(brand_list) > 0:
+    if len(brand_list) > 0:       
         card_details = card_details.filter(brand__brand__in = brand_list).all().distinct()
+        procs = args[0].filter(brand__brand__in = brand_list).all().distinct()
     if len(age_list) > 0:
-       card_details = card_details.filter(age__age__in = age_list).all().distinct()
+        card_details = card_details.filter(age__age__in = age_list).all().distinct()
+        procs = args[0].filter(age__age__in = age_list).all().distinct()
     if len(size_list) > 0:
         card_details = card_details.filter(size__size__in = size_list).all().distinct()
+        procs = args[0].filter(size__size__in = size_list).all().distinct()
     if len(color_list) > 0:
         card_details = card_details.filter(pros__Color__color__in = color_list).all().distinct()
+        procs = args[0].filter(pros__Color__color__in = color_list).all().distinct()
     if len(material_list) > 0:
         card_details = card_details.filter(pros__Material__material__in = material_list).all().distinct()
+        procs = args[0].filter(pros__Material__material__in = material_list).all().distinct()
     if len(pattern_list) > 0:
         card_details = card_details.filter(pros__Pattern__pattern__in = pattern_list).all().distinct()
+        procs = args[0].filter(pros__Pattern__pattern__in = pattern_list).all().distinct()
     if len(occasion_list) > 0:
         card_details = card_details.filter(pros__Occasion__occasion__in = occasion_list).all().distinct()
-    products = card_details.values_list('category__category',flat=True)\
-               .exclude(category__category=None).distinct()
-    size = card_details.values_list('size__size',flat=True).exclude(size__size=None).distinct().order_by('-size__id')
-    brand = card_details.values_list('brand__brand',flat=True).exclude(brand__brand=None).distinct()
-    color = card_details.values_list('pros__Color__color',flat=True).exclude(pros__Color__color=None).distinct()
-    material =card_details.values_list('pros__Material__material',flat=True).exclude(pros__Material__material=None).distinct()
-    pattern = card_details.values_list('pros__Pattern__pattern',flat=True).exclude(pros__Pattern__pattern=None).distinct()
-    occasion = card_details.values_list('pros__Occasion__occasion',flat=True).exclude(pros__Occasion__occasion=None).distinct()
+        procs = args[0].filter(pros__Occasion__occasion__in = occasion_list).all().distinct()
+
+    size = card_details.values(pro = F('size__size')).exclude(size__size=None).order_by('size__id').annotate(count = Count('size'))
+    brand = card_details.values(pro = F('brand__brand')).annotate(count = Count('brand'))
+    color = card_details.values(pro = F('pros__Color__color')).annotate(count=Count('pros__Color'))
+    material =card_details.values(pro = F('pros__Material__material')).annotate(count=Count('pros__Material'))
+    pattern = card_details.values(pro = F('pros__Pattern__pattern')).annotate(count=Count('pros__Pattern'))
+    occasion = card_details.values(pro = F('pros__Occasion__occasion')).annotate(count=Count('pros__Occasion'))
     discounts = models.DISCOUNT_CHOICES
-    card_details = sortby(card_details,sort_data) 
+    if checked_lists != 'category':   
+        products = procs.values(pro = F('category__category')).annotate(count=Count('category'))
+    else:   
+        products = card_details.values(pro = F('category__category')).annotate(count=Count('category'))
+    card_details = sortby(card_details,sort_data)
+    
     all_filts = {'category':products,'age':[],'brand':brand,'discount':discounts,
                    'size':size,'color':color,'material':material,'pattern':pattern,
                    'occasion':occasion,'neck':neck,'pocket':pocket,'sleeve':sleeve,
                    'rise':rise,'stretchable':stretch}
-    filt = list(args[1].GET.keys())[len(list(args[1].GET.keys()))-1][:-2]
+    #check_lists =([i[:-2] for i in filt])
     filters = {}
     for x,y in all_filts.items():
-        if x == filt:
+        if x == checked_lists:
            continue
         value = render_to_string('other_filters.html',{'value':y,'key':x,'gender':args[2]})
         filters[x] = value  
     ajax = render_to_string('cards.html', {'details': card_details}) 
-    return {'details':ajax,'filter':filters}
+    json_str = json.dumps(card_details.count())
+    return {'details':ajax,'filter':filters,'count':json_str}
 
 
 def checker(set_nospace,splits,sets):
-        setindex = False
+        setindex = ''
         for x in set_nospace:
           for s in splits:
+              s = s.replace(' ','').replace('-','')
               if x.startswith(s):
                   setindex = sets[set_nospace.index(x)]                
         return setindex
 
-def gender_checker(gender):   
-        if gender == 'kids':
-           lookup =  Q(gender__in = ['girls','boys'])
+
+def gender_checker(genders):
+    if type(genders) == type([]):
+        if any(i for i in ['women','men','girls','boys','kids'] if i in genders):
+            for gender in genders:
+               if gender == 'kids':
+                  lookup = Q(gender__in = ['girls','boys']) 
+               else:
+                  lookup = Q(gender = gender)               
+        else:         
+            lookup = Q(gender__in = ['women','men','girls','boys'])                    
+    else:
+        if genders == 'kids':
+           lookup = Q(gender__in = ['girls','boys'])
         else:
-           lookup =  Q(gender__iexact = gender)     
-        return lookup
+           lookup = Q(gender__iexact = genders)
+    return lookup                     

@@ -43,7 +43,9 @@
                         <input type="search" class="mx-auto my-1 d-block" id="brandsearch"
                           placeholder="search brands..." name="bsearch">
                         {% for b in allbrands %}
-                          <li><a class="dropdown-item" href="#">{{b.brand}}</a></li>
+                          <li><a class="dropdown-item" 
+                            href="{% url 'all_brands' %}?brand={{b.brand}}">{{b.brand}}</a>
+                          </li>
                         {% endfor %}
                      </ul>
                  </li>

@@ -4,7 +4,7 @@ from . models import AllFashion,Brand, Category,Color, EcomCart, EcomCartItem, P
 # Register your models here.
 
 
-admin.site.register(Category)
+
 admin.site.register(Material)
 admin.site.register(Pattern)
 admin.site.register(Sleeve)
@@ -15,7 +15,10 @@ admin.site.register(Occasion)
 admin.site.register(KidsAge)
 
 
-
+class CatAdmin(admin.ModelAdmin):
+  list_display = ('id','category')
+admin.site.register(Category,CatAdmin)
+  
 class AllFashionAdmin(admin.ModelAdmin):
   list_display = ('id','gender','category','brand','title','price','mrp','discount',
                  'card_image','dlvry_charges','upload_date')

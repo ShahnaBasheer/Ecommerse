@@ -6,14 +6,14 @@
 {% endblock %}
 
 {% block title %}
-Women Fashions
+{{search}}
 {% endblock %}
 
 {% block categories %}
-   {% include 'sortby.html' with heading="Women" %}
+   {% include 'sortby.html' with heading="" %}
 
    <!-- Products-->
-   <div class="mx-4 my-5 womenpage">
+   <div class="mx-4 my-5 brandpage">
       <div class="row ">
          <div class="col-md-3 filterscontainer">
             <div class="filters">
@@ -26,7 +26,7 @@ Women Fashions
                 </div>
               {% endfor %}     
               </div> 
-              
+              <input type="hidden" id="brandvalue" value="{{search}}">
             </div>
          </div>  
          <!-- All products images-->

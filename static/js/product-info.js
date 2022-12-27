@@ -25,10 +25,11 @@ $(document).ready(function(){
           dataType:'json',
           success:function(response){  
             $('.cart-qnty').text(response.cart_qnty);
+            $("a.addtocart").remove()  
+    $("div.cartbt input").after("<a class='gotocart btn btn-block mb-3' href='/cart'>GO TO CART</a>")
           } 
         });
-    $("a.addtocart").remove()  
-    $("div.cartbt input").after("<a class='gotocart btn btn-block mb-3' href='/cart'>GO TO CART</a>")
+    
     
     }else{
         if(!sizetag.hasClass('selectedsize')){
