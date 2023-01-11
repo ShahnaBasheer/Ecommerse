@@ -3,15 +3,10 @@
 
 {% block newcss %}
    <link rel="stylesheet" href="{% static 'css/product-info.css' %}">
-   <link href="https://fonts.googleapis.com/css2?family=Exo+2&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block title %}
 products
-{% endblock %}
-
-{% block newjs %}
-  <script src="{% static 'js/product-info.js' %}"></script>
 {% endblock %}
 
 {% block categories %}
@@ -22,24 +17,23 @@ products
       </div>
       <div class="col-5 py-4">
         <div class="productinfo">
-            <h6>{{details.brand.brand}}</h6>
-            <h5 class="fs-5 pb-3">{{details.title}}</h5>
-            <p class="price fw-bolder">₹{{details.price}} <span class="ms-3 offer fs-6">
-              {{details.discount}}% Off</span></p>
+            <h6 class="brandinfo">{{details.brand.brand}}</h6>
+            <h6 class="pb-3 titlename">{{details.title}}</h6>
+            <p class="price fw-bolder">₹{{q.specifications.price}}
+              {{s.price}} <span class="ms-3 offer fs-6">
+              {{q.specifications.discount}}{{s.discount}}% Off</span></p>
             <p class="text-secondary offerprice"><small>MRP
-              <span class="text-decoration-line-through"> ₹{{details.mrp}}</span> 
-              Inclusive of all taxes</small></p>
+              <span class="text-decoration-line-through"> ₹{{q.specifications.mrp}}
+                {{s.mrp}}</span>Inclusive of all taxes</small></p>
             <hr>
-            {% if sizeall %} 
+            {% if sizeall %}
+
               <div class="py-3"> 
-                <p class="me-4 text-decoration-underline selectsize">Select Size</p>
+                <h5 class="pb-2 text-decoration-underline selectsize">Select Size<h5
                 <ul id="sizes" class="list-inline-item list-unstyled">
-                   {% for z in details.size.all %}
-                     <li class="list-inline-item mb-3 selected-size"
-                       data-size="{{z.size}}">{{z.size}}</li>
-                   {% endfor %}
+                   {% include 'size-selected.html' %}
                 </ul>
-                <p class="text-danger" id="sizealert"></p>
+                <p class="text-danger fs-6" id="sizealert"></p>
               </div>
             {% endif %}
             <div class="d-grid cartbt">
@@ -54,39 +48,168 @@ products
             </div>
         </div>
  
-        <div class="mt-5">
-          <h5 class="pb-2">Sellers</h5>
-            {% for s in productdetails.Sellers.values %}
-              {% if productdetails.Sellers.values|length > 1 %} 
-               <input type="radio" value="{{s.seller}}" name="seller" required>
-              {% endif %}
-               <a href="#" class="seller">{{s.seller}}</a>
-               <p>{{s.about_us}}</p>              
+        <div class="mt-4 seller-details">
+          <h5 class="pb-2 text-decoration-underline">Sellers</h5>
+            {% for s in details.Sellers.all %}
+                {% if details.Sellers.all|length > 1 %}
+                   <div class="my-1"> 
+                     <input type="radio" id="seller_{{forloop.counter}}"
+                        value="{{s.seller.seller}}" name="seller" 
+                        {% if seller_s == s.seller.seller or q.seller.seller == s.seller.seller %}
+                        checked{% endif %} required>
+                     <label for="seller_{{forloop.counter}}"><a data-bs-toggle="modal"
+                        href="#SellerModal{{forloop.counter}}" 
+                        {% if seller_s == s.seller.seller or q.seller.seller == s.seller.seller %}
+                        class="sellerone"{% endif %}">{{s.seller.seller}}</a>
+                     </label>
+                   </div>
+                {% else %}
+                  <a data-bs-toggle="modal" class="sellerone"
+                     href="#SellerModal{{forloop.counter}}">{{s.seller.seller}}</a>
+                {% endif %}
+                <!-- Modal -->
+                <div class="modal fade" id="SellerModal{{forloop.counter}}" tabindex="-1" aria-labelledby="SellerLabel{{forloop.counter}}" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="SellerLabel{{forloop.counter}}">About Seller</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                         <h5>{{s.seller.seller}}</h5>
+                         <p>{{s.seller.about_us}}</p>
+                         <p>seller since:{{s.seller.join_date|timesince}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>  
             {% endfor %}
-            <p class="text-danger" id="selleralert"></p>
         </div>
+
           <div class="productinformation my-5">
-            <h4>PRODUCT INFORMATIONS</h4>
-            <div>
-                <h5 class="py-4">Product Details</h5>
-                {% for x,y in productdetails.get_fields %}
-                <div class="row pb-3">
-                   <div class="col-5 details fw-bold">{{x}}</div>
-                   {% if x == "Color" %}
-                      <div class="col-7">{{y.all|join:", "}}</div>
-                   {% else %}
-                      <div class="col-7">{{y}}</div>
-                   {% endif %}
+            <h5 class="pb-2">PRODUCT INFORMATIONS</h5>
+          
+           <div class="accordion" id="pro-accordion">
+             <div class="accordion-item">
+               <h2 class="accordion-header" id="prod-head">
+                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#prod-acc"
+                    aria-expanded="false" aria-controls="prod-acc">
+                   Product Details
+                 </button>
+               </h2>
+               <div id="prod-acc" class="accordion-collapse collapse" aria-labelledby="pro-head">
+                 <div class="accordion-body">
+                    {% for x,y in details.Products.get_fields %}
+                      <div class="row pb-3">
+                         <div class="col-5 details fw-bold">{{x}}</div>
+                         {% if x == "Color" %}
+                            <div class="col-7">{{y.all|join:", "}}</div>
+                         {% else %}
+                            <div class="col-7">{{y}}</div>
+                         {% endif %}
+                      </div>
+                    {% endfor %}
+                 </div>
+               </div>
+              </div>            
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="desc-head">
+                  <button class="accordion-button collapsed" type="button" 
+                     data-bs-toggle="collapse" data-bs-target="#desc-acc"
+                     aria-expanded="false" aria-controls="desc-acc">
+                     Descriptions
+                  </button>
+                </h2>
+                <div id="desc-acc" class="accordion-collapse collapse" aria-labelledby="desc-head">
+                  <div class="accordion-body">
+                    <p>{{details.Products.Descriptions}}</p>
+                  </div>
                 </div>
-                {% endfor %}
-                
-                <h5 class="py-4">Descriptions</h5>
-                <p>{{productdetails.Descriptions}}</p>
-                <h5 class="py-4">About Us</h5>
-                <p>{{productdetails.Product.brand.about}}</p>
+              </div>
+              <div class="accordion-item">
+                <h2 class="accordion-header" id="manufac-head">
+                  <button class="accordion-button collapsed" type="button" 
+                     data-bs-toggle="collapse" data-bs-target="#manufac-acc"
+                     aria-expanded="false" aria-controls="manufac-acc">
+                     Manufacture Details
+                  </button>
+                </h2>
+                <div id="manufac-acc" class="accordion-collapse collapse" aria-labelledby="manufac-head">
+                  <div class="accordion-body">
+                    <p>
+                       <div>Country Of Origin</div>
+                       <div>{{details.Products.Country}}</div>
+                    </p>
+                    <p>
+                      <div>Manufacturer/ Packer/ Importer</div>
+                      <div>{{details.Products.Manufacture|linebreaksbr}}</div>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            {% if details.brand.about == '' %}
+            {% else %}
+              <h5 class="pb-2">ABOUT US</h5>
+              <p>{{details.brand.about}}</p>
+            {% endif %}
             </div>       
-        </div>
-      </div> 
-   </div>  
-  </div>   
-{% endblock %} 
+          </div> 
+      </div>  
+    </div>  
+  </div> 
+{% endblock %}
+
+{% block newjs %}
+<script>
+   $(document).ready(function(){
+      let sizetag = $(".selected-size");
+      let sellerone = $('.seller-details .sellerone');
+      let seller =  sellerone.text()
+      let size_url = $(".selected-size a");
+      
+      
+      $(document).on('click',".no-size",function(){
+        $("#sizealert").text("please change seller for available selected size!");
+      })
+
+      $(document).on('change',".seller-details input[type='radio']",function(){
+        seller = $(this).val();
+        $.ajax({
+           url:"{% url 'product_info' details.slug %}",
+           data:{'sl':seller},
+           dataType:'json',
+           success:function(response){  
+               $("#sizes").html(response.sizes);
+           } 
+        });
+
+      });
+       
+      $(".addtocart").click(function(){
+         let size = $('.selectedsize').data('size');
+         let pro_id = $('.hiddenid').data('pro_id');
+         if((sizetag.hasClass('selectedsize')||sizetag.length==0)){   
+           let product={'size':size,'seller':seller}
+           
+           $.ajax({
+             url:'/add_to_cart/' + pro_id,
+             data: product,
+             dataType:'json',
+             success:function(response){  
+               $('.cart-qnty').text(response.cart_qnty);
+               $("a.addtocart").remove()  
+         $("div.cartbt input").after("<a class='gotocart btn btn-block mb-3' href='/cart'>GO TO CART</a>")
+             } 
+           });
+
+         }else{
+           if(!sizetag.hasClass('selectedsize')){
+             $('#sizealert').text("please select size to proceed");
+           }       
+         } 
+       });   
+     });  
+</script>   
+{% endblock %}

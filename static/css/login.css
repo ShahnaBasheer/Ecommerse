@@ -1,12 +1,17 @@
 *{
   box-sizing: border-box;
 }
+
+html{
+  height:880px; /*background-color: #f0ea80; lightcoral */
+}
 body{
-  background-image: linear-gradient(to bottom right,rgb(166, 62, 2) ,rgb(101, 4, 96),rgb(3, 18, 88));
-  height: 100vh; /*background-color: #f0ea80; lightcoral */
+  background-image: linear-gradient(#660033,#993366);
+  height:100vh;
 }
 .submit{
-  background-color: rebeccapurple;
+  /*background-color: #3162c4;*/
+  background: linear-gradient(to bottom, #336699 0%, #003366 100%);
   color:white;
   border:none;
 }
@@ -16,7 +21,7 @@ body{
   box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
   /*box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;*/
 }
-#uname,#passwrd,.input{
+#user_name,#passwrd,.input{
   width:90%;
   padding:6px;
   font-size: 17px;
@@ -30,8 +35,7 @@ body{
 
 /* Registration */
 
-.register{
-  width:500px;
-  height:auto;
+.card.register{ 
+  border-radius:15px;
   box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
 }

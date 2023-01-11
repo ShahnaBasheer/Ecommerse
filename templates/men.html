@@ -21,13 +21,14 @@ Men Fashions
                <h5>Filters</h5>
                
                <div class="all_filters">
-                  {% for key,value in allproducts.items %}
-                   <div id="{{key}}box">
-                      {% include 'other_filters.html' %}
-                   </div>
-                 {% endfor %}     
-                 </div> 
-                             
+                  <div class="accordion accordion-flush" id="filt_accordion">
+                   {% for key,value in allproducts.items %}
+                      <div id="{{key}}box" class="allfilts">
+                         {% include 'other_filters.html' %}
+                      </div>
+                   {% endfor %}
+                  </div>     
+               </div>                      
             </div>
          </div>    
          <!-- All products images-->

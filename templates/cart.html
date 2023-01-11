@@ -17,12 +17,11 @@
          <div class="row">
             {% if cartitems %}
             <div class="col-8 p-0">
-               <div class="items bg-body m-1 p-3 rounded">
-                  <h4 class="text-center shophead">SHOPPING CART</h4> 
-                  <hr>
+               <div class="items bg-body m-1 rounded">
+                  <h4 class="text-center shophead p-3 rounded">SHOPPING CART</h4> 
                
                   {% for c in cartitems %}
-                  <div class="row my-4">
+                  <div class="row my-4 p-3">
                      <div class="col-3">
                         <div class="image-container">
                            <img src={{c.cart_image.url}} alt="cart_image" class="img-fluid" width=100 height=130>
@@ -30,17 +29,25 @@
                      </div>
                      <div class="col-6">
                         <p class="fw-bold">{{c.brand}}</p>
-                        <p class="fw-bold">{{c.title}}</p>
-                        {% if c.size == None %}
+                        <p class="fw-bold"><a href="{% url 'product_info' c.carted_product.slug %}"> {{c.title}}</a></p>
+                        {% if c.size == None or c.size == 'Free Size'%}
                         {% else %}
-                           <p>Size: {{c.size}}</p>
+                           <p>Size: {{c.size.sizes}}</p>
                         {% endif %}
-                        <p>Seller: {{c.seller}}</p>
+                        <p>Seller: {{c.seller.seller}}</p>
                         <p>₹{{c.total_price}}
-                           <span class="ms-3 text-success text-decoration-line-through fs-6">₹{{c.total_mrp}}</span>
+                           <span class="ms-3 text-success text-decoration-line-through
+                              fs-6">₹{{c.total_mrp}}</span>
+                           <span class="ms-3 text-success fw-bolder fs-6">
+                              ₹{{c.size.discount}} % Off </span>
                         </p>
-                        <a href="{% url 'save_for_later' c.id %}" class="btn btn-danger btn-sm">Save It For Later</a> 
-                        <a href="{% url 'remove_cartitem' c.id %}" class="btn btn-success btn-sm">Remove</a>
+                        <p>Delivery charge: <span class="text-success fw-bold">
+                            {% if c.seller.dlvry_charges == "FREE" %}{{c.seller.dlvry_charges}}
+                            {% else %} ₹{{c.seller.dlvry_charges}} {% endif %}</span></p>
+                        <a href="{% url 'save_for_later' c.id %}" class="btn 
+                              svlater btn-sm">Save It For Later</a> 
+                        <a href="{% url 'remove_cartitem' c.id %}" class="btn
+                             rmcart btn-sm">Remove</a>
                      </div>
                      <div class="col-3">  
                         <div class="btn-group btn-group-sm quantity" role="group" aria-label="quantity">
@@ -115,11 +122,12 @@
                     <p class="fw-bold">{{s.title}}</p>
                     {% if s.size == None %}
                     {% else %}
-                      <p>Size: {{s.size}}</p>
+                      <p>Size: {{s.size.sizes}}</p>
                     {% endif %}
-                    <p>Seller: {{s.seller}}</p>
-                    <p>₹{{s.price}}
-                       <span class="ms-3 text-success text-decoration-line-through fs-6">₹{{s.mrp}}</span>
+                    <p>Seller: {{s.seller.seller}}</p>
+                    <p>₹{{s.size.price}}
+                       <span class="ms-3 text-success text-decoration-line-through fs-6">₹{{s.size.mrp}}</span>
+                       <span class="ms-3 text-success fw-bolder fs-6">₹{{s.size.discount}} % Off </span>
                     </p>
                     <a href="{% url 'move_to_cart' s.id %}" class="btn btn-danger btn-sm">Move To Cart</a> 
                     <a href="{% url 'remove_save_later' s.id %}" class="btn btn-success btn-sm">Remove</a>
@@ -131,8 +139,11 @@
             </div>
          </div>   
          {% else %}
+         <div class="text-center">
             <h2>Login To Add Items To Cart</h2>
-            <button>Login</button>
+            <a class="btn logincart" href="{% url 'signin' %}">Login</a>
+          </div>
+            
          {% endif %}   
       </div>
    </div>

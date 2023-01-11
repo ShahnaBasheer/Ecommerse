@@ -1,11 +1,8 @@
 *{
   box-sizing: border-box;
 }
-.product-details{
-  font-family: 'Exo 2', sans-serif;
- }
 .details{
-  font-size: 16px;
+  font-size: 1rem;
   color:rgb(142, 140, 140);
 }
 .offer{
@@ -15,21 +12,33 @@
   margin-top:-15px;
  }
 .price{
-  font-size:23px;
+  font-size:1.18rem;
 }
 #sizes li{
   border: 2px solid rgb(215, 215, 215);
   border-radius: 2px;
-  padding:3px 15px;
   font-weight: 600;
+  font-size: 1rem;
   cursor:pointer;
  }
-.selectsize{
-  font-size: 21px;
+#sizes li a{
+  padding:6px 13px;
+  display: inline-block;
 }
 .selectedsize{
-  border:2px solid rgb(26, 114, 208) !important;
-  color:rgb(26, 114, 208) ;
+  border-style: solid;
+  border-color: rgb(26, 114, 208) !important;
+}
+.selectedsize a{
+  color:rgb(26, 114, 208) !important;
+}
+.no-size{
+  border-style: solid;
+  border-color: rgb(215, 49, 38) !important; 
+}
+.no-size a{
+  pointer-events: none;
+  color:rgb(215, 49, 38) !important;
 }
 .addtocart{
   padding:10px;
@@ -41,7 +50,7 @@
   padding:10px;
   color:white;
   border:none;
-  background-color: rgb(205, 125, 55);
+  background-color: rgb(205, 180, 55);
 }
 .buynow{
   padding:10px;
@@ -49,12 +58,17 @@
   border:none;
   background-color: rgb(43, 119, 114);
 }
-.productinfo h6{
+.productinfo .brandinfo{
   background-color: rgb(215, 238, 151);
   display: inline-block;
   padding:6px 25px;
-  font-weight: bolder;
+  font-weight: bold;
+  font-size: 0.93rem;
   border-radius: 15px 50px;
+}
+.productinfo .titlename{
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 .btn:focus,.btn:active:focus,.btn:hover{
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;

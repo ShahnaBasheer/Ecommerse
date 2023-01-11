@@ -1,9 +1,17 @@
 $(document).ready(function(){  
-    
+   let sortby =  $("#sortby");
+
    $("#clicksort").click(function(){
-       $("#sortby").toggle();
+       sortby.toggle();
    });
 
+   $(document).mouseup(function(e){
+       if(!sortby.is(e.target) && !(e.target).closest('h5') && !sortby.has(e.target).length){
+         sortby.hide();
+     }
+   });
+       
+   
    $(document).on('click','.filter-radio,.filter-checkbox,#sortby input', function(){   
         let _filterObj = {};
         let check_lists = {};
@@ -22,10 +30,7 @@ $(document).ready(function(){
                 .map(function(el){return el.value;});
             });
          }
-         
-         console.log(_filterObj);
-         console.log(_filterObj._checked)
-         
+
          $.ajax({
             type:'GET',
             url:'filter_data',
@@ -49,16 +54,18 @@ $(document).ready(function(){
                $("#risebox").html(response.filter.rise);
                $("#stretchablebox").html(response.filter.stretchable);
                
-
                for(x in check_lists){
                   if(check_lists[x].length > 0){
                      for(i of check_lists[x]){
                         $("input[value='"+i+"']").attr('checked',true);
+                        $("#filter_"+x).addClass("show");
+                        $("#"+x+"_heading button").addClass("acc-buttons");
+                        console.log(x);
                      }
                   }                  
                }
                }
-         });  
+         });
    });   
    $("input#brandsearch").keyup(function(){
       let inputvalue = $(this).val().toLowerCase();
@@ -72,7 +79,6 @@ $(document).ready(function(){
          $(this).toggle($(this).text().toLowerCase().replace('-',"").indexOf(inputvalue)>-1)
        });
    });
-
 });
      
   

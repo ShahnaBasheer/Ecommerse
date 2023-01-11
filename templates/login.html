@@ -15,20 +15,21 @@
   </head>
   <body class="d-flex align-items-center justify-content-center">
 
-    <div class="bg-white login row align-items-center">
+    <div class="bg-white login row align-items-center rounded-3">
       <div class="text-center col mx-auto">
+        <h4>Login in to Snapquick</h4>
 
         <form action="" method="POST" class="p-1">
           {% csrf_token %}
-              <div class="mb-4">
-                <label for="uname" class="pb-2 fw-bold d-block">USERNAME</label>
-                <input type="text" placeholder="Enter Your Username"  id="uname"
+              <div class="mb-4 mt-3">
+                <label for="user_name" class="pb-2 fw-bold d-block">USERNAME</label>
+                <input type="text" placeholder="Enter Your Username"  id="user_name"
                   name="username" required>
               </div>
               <div class="mb-1">
                 <label for="passwrd" class="pb-2 fw-bold d-block">PASSWORD</label>
                 <input type="password" placeholder="Enter Your Password" id="passwrd"
-                   name="password" required>
+                   name="password" minlength="3" maxlength="30" required>
               </div>
               <div class="mb-4 row">
                 <div class="col">
@@ -45,7 +46,7 @@
               </div>
             {% endfor %}
 
-              <input type="submit" value="Login" class="submit btn mb-5">
+              <input type="submit" value="Login" class="submit btn mt-4 mb-3">
               <div>
                 <a href="{% url 'registration' %}" class="text-decoration-none sign">New to Fashion? Sign Up here</a>
               </div>          

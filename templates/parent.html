@@ -18,9 +18,9 @@
   <body>
       
       <!--navigation bar-->
-      <nav class="navbar navbar-expand-md bg-dark navbar-dark fixed-top">
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top">
          <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'homepage'%}">Fashion</a>
+            <a class="navbar-brand" href="{% url 'homepage'%}">SnapQuick</a>
             <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menus">
                <span class="navbar-toggler-icon"></span>
             </button>
@@ -59,8 +59,8 @@
                         id="psearch SearchDrop" name="search" data-bs-toggle="dropdown" aria-label="Search your products.." 
                         aria-describedby="button-addon2" autocomplete="off">
                     <input type="hidden" name="searchType" value="ManualSearch">
-                    <button class="btn btn-primary" type="submit" id="button-addon2">
-                       <i class="fas fa-search"></i>
+                    <button class="btn searchbtn" type="submit" id="button-addon2">
+                       <i class="fas fa-search text-white"></i>
                     </button>
                     <ul class="searchmenu dropdown-menu" aria-labelledby="SearchDrop">
                      {% for item in automate_search %}
@@ -87,7 +87,7 @@
                </ul>
             </div>
             <a class="text-white cartbutton text-decoration-none" href="{% url 'cart' %}">
-               <span class="cart-qnty badge rounded-pill bg-danger">{{quantity}}</span>
+               <span class="cart-qnty badge rounded-pill text-body">{{quantity}}</span>
                <i class="fa-solid fa-cart-shopping"></i>
             </a>
          </div>

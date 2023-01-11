@@ -13,75 +13,130 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
   </head>
-  <body class="d-flex align-items-center justify-content-center">
+  <body>  
+        <div class="container my-5">
+          <h1 class="text-center text-white mb-5 fw-bolder">SNAPQUICK</h1>
+          <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-7 col-xl-6 col-md-9">
+              <div class="card register">
+                <div class="card-body p-4 p-md-5">
+                  <h3 class="mb-4 pb-2 pb-md-0 mb-md-5 text-center">Create a new account</h3>
+                  
+                  <form method="POST" action="{% url 'registration' %}">
+                    {% csrf_token %}
+                    <div class="row">
 
-    <div class="bg-white register row align-items-center">
-      <div class="col mx-auto">
-        
-        <form action="{% url 'registration' %}" method="POST" class="p-4">
-         {% csrf_token %}
-              <div class="row mb-3">
-                <div class="col-4">
-                   <label for="username" class="pb-2 fw-bold d-block">Username</label>
-                </div>
-                <div class="col-8">
-                   <input type="text" placeholder="Enter Firstname" id="username"
-                     name="username" class="input" required>
+                      <div class="col-md-6 mb-3">
+                        <div class="form-outline">
+                          <input type="text" class="form-control" name="firstname" 
+                            id="firstName" required/>
+                          <label class="form-label" for="firstName">First Name</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <div class="form-outline">
+                          <input type="text" class="form-control" name="lastname" 
+                            id="lastName" required/>
+                          <label class="form-label" for="lastName">Last Name</label>
+                        </div>
+                      </div>
+
+                    </div>
+      
+                    <div class="row">
+                      <div class="col-md-6 mb-3 d-flex align-items-center">
+                        <div class="form-outline w-100">
+                          <input type="text" class="form-control" name="username" 
+                            id="userName" required/>
+                          <label for="userName" class="form-label">User Name</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3 d-flex align-items-center">
+                        <div class="form-outline w-100">
+                          <input type="date" class="form-control" name="birthdate"
+                            id="birthDate" required/>
+                          <label for="birthDate" class="form-label">Birthdate</label>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+
+                      <div class="col-12 mb-3">
+                        <h6 class="mb-2 pb-1 d-inline-block me-4">Gender: </h6>
+                        <div class="form-check form-check-inline">
+                          <input type="radio" class="form-check-input" name="gender" id="femaleGender"
+                            value="Female" required/>
+                          <label class="form-check-label" for="femaleGender">Female</label>
+                        </div>
+      
+                        <div class="form-check form-check-inline">
+                          <input type="radio" class="form-check-input" name="gender" id="maleGender"
+                            value="Male" required/>
+                          <label class="form-check-label" for="maleGender">Male</label>
+                        </div>
+      
+                        <div class="form-check form-check-inline">
+                          <input type="radio" class="form-check-input" name="gender" id="TransGender"
+                            value="Transgender" required/>
+                          <label class="form-check-label" for="TransGender">Transgender</label>
+                        </div>
+                      </div>
+
+                    </div>
+      
+                    <div class="row">
+
+                      <div class="col-md-6 mb-3 pb-2">
+                        <div class="form-outline">
+                          <input type="email" class="form-control" name="email" 
+                             id="emailAddress" required/>
+                          <label class="form-label" for="emailAddress">Email</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3 pb-2">
+                        <div class="form-outline">
+                          <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1">+91</span>
+                            <input type="tel" class="form-control" name="telephone" id="phoneNumber"/>
+                          </div>  
+                          <label class="form-label" for="phoneNumber">Phone Number</label>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+
+                      <div class="col-md-6 mb-3 pb-2">
+                        <div class="form-outline">
+                          <input type="password" id="urPassword" name="password" 
+                             class="form-control" required/>
+                          <label class="form-label" for="urPassword">Password</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3 pb-2">
+                        <div class="form-outline">
+                          <input type="password" id="repeatPass" name="repeatpassword" 
+                            class="form-control" required/>
+                          <label class="form-label" for="repeatPass">Repeat Password</label>
+                        </div>
+                        
+                      </div>
+
+                    </div>
+      
+                    <div class="mt-2 pt-2 text-center">
+                      <input class="btn btn-primary d-block mx-auto mb-3 submit" type="submit" value="Sign Up"/>
+                        <a href="{% url 'signin' %}" class="text-decoration-none sign">Already have an account?</a>
+                    </div>
+      
+                  </form>
                 </div>
               </div>
-              <div class="row mb-3">
-                <div class="col-4">
-                   <label for="fname" class="pb-2 fw-bold d-block">First Name</label>
-                </div>
-                <div class="col-8">
-                   <input type="text" placeholder="Enter Firstname" id="fname"
-                     name="firstname" class="input" required>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-4">
-                   <label for="lname" class="pb-2 fw-bold d-block">Last Name</label>
-                </div>
-                <div class="col-8">
-                   <input type="text" placeholder="Enter Lastname" id="lname"
-                      name="lastname" class="input" required>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-4">
-                   <label for="email" class="pb-2 fw-bold d-block">Email Address</label>
-                </div>
-                <div class="col-8">
-                   <input type="email" placeholder="Enter Email"  id="email"
-                     name="email" class="input" required>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-4">
-                   <label for="psswrd" class="pb-2 fw-bold d-block">Password</label>
-                </div>
-                <div class="col-8">
-                   <input type="password" placeholder="Enter Password" id="psswrd"
-                     name="password" class="input" required>
-                </div>
-              </div>
-              <div class="row mb-3">
-                <div class="col-4">
-                   <label for="repeatpass" class="pb-2 fw-bold d-block">Repeat Password</label>
-                </div>
-                <div class="col-8">
-                   <input type="password" placeholder="Repeat Password" id="repeatpsswrd"
-                     name="repeatpass" class="input" required>
-                </div>
-              </div>
-              <div class="text-center mb-4">
-                  <input type="submit" value="Submit" class="submit btn">
-              </div>
-              <div class="text-center">
-                <p class="signin">Already have an account? <a href="{% url 'signin' %}">Sign in</a>.</p>
-              </div>
-        </form>
-      </div>
-    </div>
+            </div>
+          </div>
+        </div>
   </body>
 </html>

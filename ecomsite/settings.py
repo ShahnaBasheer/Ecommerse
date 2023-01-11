@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ecomapp',
+    'ecommapp',
 ]
+AUTH_USER_MODEL = 'ecommapp.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,9 +65,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'ecomapp.context_processors.quantity',
-                'ecomapp.context_processors.brands',
-                'ecomapp.context_processors.search_items',
+                'ecommapp.context_processors.quantity',
+                'ecommapp.context_processors.brands',
+                'ecommapp.context_processors.search_items',
 
             ],
         },

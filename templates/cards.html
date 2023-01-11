@@ -8,10 +8,12 @@
            <div class="card-body">
               <h6>{{x.brand.brand}}</h6>
               <p class="text-secondary text-capitalize card-title">{{x.title}}</p>
-              <p class="fs-6 fw-bold">₹{{x.price}}
-               <span class="text-decoration-line-through ms-2 text-secondary">
-                  {{x.mrp}}</span>
-                  <span class="text-success">{{x.discount}}%</span>
+              {% with s=x.Sellers.all|first %}
+                <p class="fs-6 fw-bold">₹{{s.specifications.price}}        
+              <span class="text-decoration-line-through ms-2 text-secondary">
+                {{s.specifications.mrp}}</span>
+                <span class="text-success">{{s.specifications.discount}}%</span>
+              {% endwith %}
               </p>
            </div>
          </div>

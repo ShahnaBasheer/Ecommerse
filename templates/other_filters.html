@@ -1,28 +1,40 @@
-
-{% if value|length == 0 %}
-{% else %}
-<div class="filtbox p-2 mb-2">
- <h6 class="text-capitalize">{{key}}</h6> 
-   <div class="px-3 {{key}}">
-      {% if key == 'discount' %}
-      {% for k,v in value %}
-         <div class="d-flex justify-content-between pb-2">
-           <label for="{{key}}{{forloop.counter}}">{{v}}</label>
-           <input type="checkbox" id="{{key}}{{forloop.counter}}" data-gender="{{gender}}"
-              data-filter="{{key}}" class="filter-checkbox" value="{{k}}">
+<div class="accordion-item">
+   {% if value|length == 0 %}
+   {% else %}
+      <div class="accordion-header" id="{{key}}_heading">
+          <button class="accordion-button text-capitalize collapsed" type="button" data-bs-toggle="collapse" 
+              data-bs-target="#filter_{{key}}" aria-expanded="true" 
+              aria-controls="collapse_{{key}}">
+             {{key}}
+          </button>
          </div>
-      {% endfor %}   
-  {% else %}
-     {% for v in value %}
-    
-         <div class="d-flex justify-content-between pb-2">
-           <label for="{{key}}{{forloop.counter}}">{{v.pro}} ({{v.count}})</label>
-           <input type="checkbox" id="{{key}}{{forloop.counter}}" data-gender="{{gender}}"
-              data-filter="{{key}}" class="filter-checkbox" value="{{v.pro}}">
+      <div id="filter_{{key}}" class="accordion-collapse collapse" 
+              aria-labelledby="{{key}}_heading">
+         <div class="accordion-body">
+           <div class="px-3 {{key}}">
+             {% if key == 'discount' %}
+               {% for v in value %}
+                  <div class="d-flex justify-content-between pb-2">
+                    <label for="{{key}}{{forloop.counter}}">{{v.pro}} ({{v.count}})</label>
+                    <input type="radio" id="{{key}}{{forloop.counter}}" data-gender="{{gender}}"
+                       data-filter="{{key}}" class="filter-radio" value="{{v.pro}}" name="gender">
+                  </div>
+               {% endfor %}   
+             {% else %}
+               {% for v in value %}           
+                  <div class="d-flex justify-content-between pb-2">
+                    <label for="{{key}}{{forloop.counter}}">{{v.pro}} ({{v.count}})</label>
+                    <input type="checkbox" id="{{key}}{{forloop.counter}}" data-gender="{{gender}}"
+                       data-filter="{{key}}" class="filter-checkbox" value="{{v.pro}}">
+                  </div>           
+               {% endfor %}   
+             {% endif %}
+           </div> 
          </div>
-     
-      {% endfor %}   
-  {% endif %}
-   </div>    
+      </div>
+   {% endif %}
 </div>
-{% endif %}
+
+
+   
+    

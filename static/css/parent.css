@@ -1,15 +1,28 @@
 /* navbar and homeimage*/
+
 *{
   box-sizing: border-box;  
 }
+body{
+  font-family: 'Comfortaa', cursive;
+  font-weight:500;
+  font-size: 1rem;
+}
 .navbar{
-  padding:0px;
+  padding:5px;
+  background-image: linear-gradient(#993366,#660033);
+  /*background-color: #660033;*/
+  /*background: linear-gradient(to bottom left, #006666 0%, #003366 100%);*/
+  font-size: 1rem;
+  box-shadow: 2px 2px 3px #4b2230;
 }
 .navbar-brand{
   font-family: 'Comfortaa', cursive;
+  text-shadow: 4px 0px 5px rgba(10, 0, 0, 0.84),1px -2px 1px rgba(70, 15, 66, 1);
 }
 .navbar-expand-md .navbar-nav .nav-link{
-  padding:.5rem 1.5rem;  
+  padding:.5rem 1.5rem;
+  font-size: 1rem;  
 }
 .navbar-expand-sm .navbar-nav .nav-link:hover{
   background-color:white;
@@ -37,7 +50,8 @@
   box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px; 
 } 
 .dropdown-menu .dropdown-item:hover,li a.dropdown-item:focus{
-  background-color:rgb(231, 105, 105); 
+  background-color: #3162c4;
+  /*rgb(231, 105, 105) */ 
   color:white; 
 }
 ul.brand.dropdown-menu{
@@ -61,9 +75,15 @@ ul.brand.dropdown-menu input {
   text-overflow:ellipsis;
   white-space:nowrap;
 }
-
+.searchbtn{
+  background-color: #3162c4;
+  /*background: linear-gradient(to bottom left, #336699 0%, #006666 100%);/*#7A2048*/
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;}
+.cart-qnty{
+  background-color:#DADBDD ;/*#00A4CCFF*/
+}
 .homecategory{
-background-color: rgb(214, 237, 241);  
+background-color: #DADBDD;  
 }
 footer{
   display:none;

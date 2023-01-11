@@ -7,17 +7,31 @@ body{
 .image-container{
   width:100px;
   height:133px;
-  border:1px solid black;
+  /*border:1px solid  #003366;*/
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 .pricedetails,.items,.save-for-later{
   box-shadow: 1px 2px 6px #585858;
 }
 .shophead{
-  color:rgb(42, 63, 205);
+  color: white;
+  background-color: #333D79FF;
+  text-shadow: 2px 1px 3px rgb(0, 0, 0);
 }
 .pricehead{
-  color:rgb(30, 178, 178);
+  color: #c33764 ;
 }
 .hrrule{
   color:#C0C0C0;
+}
+.logincart{
+  background-color: #11788F;
+}
+a.svlater{
+  background-color: #3162c4;
+  color:white;
+}
+a.rmcart{
+  background-color: #c21616;
+  color:white;
 }

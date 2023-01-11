@@ -1,0 +1,8 @@
+          {% for s in sizeall %}
+              <li data-size="{{s}}" 
+                class="list-inline-item mb-3 selected-size {% if selected_s == s %}
+                   selectedsize {% endif %} {% if s not in not_size %} no-size {% endif %}">
+                <a href="{% url 'product_info' details.slug %}?size={{s}}&seller={{seller_s}}"
+                   class="text-decoration-none text-body">{{s}}</a>
+              </li>
+          {% endfor %}

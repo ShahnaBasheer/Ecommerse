@@ -7,13 +7,15 @@
 .ruler h3,.cover{
   text-align:center;
   z-index: 3;
-  position: absolute;
   background-color: white;
+  position: absolute; 
 }
 .ruler h3{
   top:-1.3rem;
   left:2rem;
   padding:0px 20px;
+  font-weight: 700;
+  font-size: 1.4rem;
 }
 .ruler .cover{
   right:6rem;
@@ -33,6 +35,13 @@
   z-index:4;
   box-shadow: 0 0 30px rgb(0 0 0 / 30%);
   background-color: white;;
+}
+#sortby .form-check-input:checked{
+  background-color: #3162c4;
+  border-color:   #4974ca;
+}
+#sortby .form-check-input:focus{
+  box-shadow: 0 0 0 0.25rem /  rgb(2, 71, 71 / 25%); 
 }
 #sorted{
   font-size: 15px;
@@ -60,17 +69,41 @@
 /* ------ kids -------- */
 
 .filtbox{ 
-  border:1px solid black;
-  max-width:250px;
-  max-height:270px;
-  overflow: auto;
+  border:1px solid black; 
+}
+#filt_accordion .accordion-item:last-of-type .accordion-button.collapsed,
+#filt_accordion .accordion-item:last-of-type .accordion-button{
+  border-radius: 10px;
+}
+.accordion-button:focus{
+  box-shadow:none;
+}
+#filt_accordion .accordion-body{
+  outline: 1px solid #004466;
+  border-radius: 10px;
+  padding:1rem 1.15rem;
+  background-color: #ecf2f9;
+}
+#filt_accordion .accordion-button:not(.collapsed),.acc-buttons{
+  color:rgb(249, 249, 249);
+  background-image: linear-gradient(#993366,#660033);
+}
+#filt_accordion .accordion-button:hover{
+  outline: none;
+  transform:scale(1.05,1.05) translateZ(10px);
+  box-shadow: 2px 2px 3px #4b2230;
+}
+#filt_accordion .accordion-button{
+  padding:0.4rem 1.25rem;
+  background-color: #DADBDD;
+  font-size: 0.89rem;
+  font-weight: 500;  
+  /* #C7D3D4FF,#603F83FF,#CE4A7EFF,rgb(38, 190, 157), #CC6600,#DF6589FF */
+  margin:2px 0px;
 }
 .filters input[type]{
    width:18px;
    accent-color:black;
-}
-.filters h6{
-  padding-bottom:10px;
 }
 .filters label{
   font-size: 15px;
