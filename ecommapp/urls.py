@@ -4,9 +4,9 @@ from . import views
 
 urlpatterns = [
     path('',views.home,name="homepage"),
-    path('accounts/login/',views.signin,name="signin"),
+    path('accounts/login/',views.signin,name="login"),
     path('registration/',views.registration,name="registration"),
-    path('logout',views.signout,name="signout"),
+    path('logout',views.signout,name="logout"),
     path('women/',views.womentab,name="womenpage"),
     path('men/',views.mentab,name="menpage"),
     path('kids/',views.kidstab,name="kidspage"),
@@ -26,5 +26,6 @@ urlpatterns = [
     path('move_to_cart/<move_id>',views.move_to_cart,name="move_to_cart"),
     path('search-all-category/',views.searchall,name="search_all"),
     path('search-all-category/filter_data',views.filter_search,name="search_filter"),
-    
+    path('sell',views.selleradd,name="selleradd"),
+    path('user-profile/',views.profile,name="user_profile"),  
 ]

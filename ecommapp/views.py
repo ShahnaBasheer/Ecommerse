@@ -1,33 +1,151 @@
-import re
+
+from django.contrib.auth.hashers import make_password
+from django.template.loader import render_to_string
+from .forms import RegistrationForm
 from django.db.models import Count,F
 from django.db.models import Q
-from .models import CustomUser, EcomCart, EcomCartItem, Seller_Product, SaveForLater
-from django.shortcuts import render,redirect,HttpResponse,HttpResponseRedirect
+from .models import Brand, CustomUser, EcomCart, EcomCartItem, KidsAge, ProductInfo, Seller, Seller_Product, SaveForLater, Size
+from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from . import import_fnctns as fncs,context_processors
+from . import import_fnctns as fncs
 from django.contrib import messages
 from django.template.loader import render_to_string
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from ecommapp.models import AllFashion,Color
+
+from ecommapp import models
 # Create your views here.
+
+
+def selleradd(request):
+    products = AllFashion.objects.all()
+    proinfo = ProductInfo.objects.all()
+    brands = Brand.objects.all()
+    ages = KidsAge.objects.all()
+    colors = Color.objects.all()
+    sellers = Seller.objects.all()
+     
+    if request.method == 'POST':
+        bran = request.POST.get('bran')
+        b_about = request.POST.get('aboutbrand')
+        cat = request.POST.get('category')
+        gender = request.POST.get('gender') 
+        age = request.POST.getlist('age')    
+        title = request.POST.get('title')    
+        material = request.POST.get('material')    
+        pattern = request.POST.get('pattern')    
+        pocket = request.POST.get('pocket')    
+        sleeves = request.POST.get('sleeves')    
+        neck = request.POST.get('neck')    
+        occasion = request.POST.get('occasion')    
+        package = request.POST.get('package')
+        rise = request.POST.get('rise')    
+        care = request.POST.get('care')    
+        description = request.POST.get('description')    
+        country = request.POST.get('country')
+        manufacture = request.POST.get('manufacture')
+        sell = request.POST.get('sell')
+        img = request.POST.get('img')
+        s = request.POST.get('S')
+        xs = request.POST.get('XS')
+        m = request.POST.get('M')
+        l = request.POST.get('L')
+        xl = request.POST.get('XL')
+        xl2 = request.POST.get('2XL')
+        xl3 = request.POST.get('3XL')
+        xl4 = request.POST.get('4XL')
+        freesize = request.POST.get('fs')
+        brnd =request.POST.get('brnd')      
+        deliv = request.POST.get('deli')
+        speci = request.POST.get('speci') 
+        retu = request.POST.get('return')  
+        color = request.POST.getlist('color[]')
+        clr = request.POST.getlist('colors[]')
+        stretch = request.POST.get('Stretchable')
+        rr = [i for i in [s,xs,m,l,xl,xl2,xl3,xl4,freesize] if i!=None]
+          
+        if 'seller' in request.POST and 'sellerabout':
+            seller = request.POST.get('seller')
+            s_about = request.POST.get('sellerabout')
+            s_details,created = Seller.objects.get_or_create(seller=seller,about_us=s_about)
+            s_details.save()
+
+        br = brands.get(brand=brnd)
+        if 'title' in request.POST:
+            if brnd == False:
+                br = brands.create(brand=bran,about=b_about) 
+            br.save()         
+            
+            procs = products.create(gender=gender,title=title,brand=br,
+                        category=cat,card_image=img)
+            produinfo = proinfo.create(Material=material,
+                        Pattern=pattern,Pocket=pocket,Sleeves=sleeves,Neck=neck,
+                        Packet_Contains=package,Occasion=occasion,Rise=rise,
+                        Stretchable=stretch,Care_instructions=care,Descriptions=description,
+                        Country=country,Manufacture=manufacture)
+            procs.Products = produinfo
+            
+            clrs = color
+            if clr != []:    
+              clrs = clr
+            for f in clrs:
+               colr = colors.get_or_create(color=f)
+               produinfo.Color.set([colr])
+               colr.save()      
+
+
+            for q in age:
+               kids_age = ages.get(age=q)   
+               procs.age.set([kids_age])      
+            sp = sellers.get(seller=sell)                        
+            pks = procs.Sellers.create(seller=sp,Return=retu,dlvry_charges=deliv)
+
+            for i in rr:
+                v = int(request.POST.get(i+"_price"))
+                b = int(request.POST.get(i+"_mrp"))
+                n = int(request.POST.get(i+"_stock"))
+                if i == 'fs':
+                  i = 'Free Size'
+                s = Size.objects.create(sizes=i,price=v,mrp=b,stock=n)
+                s.save()
+                pks.size.add(s.id)
+                if i == speci:
+                   pks.specifications = s 
+                pks.save()    
+            br.save()          
+            produinfo.save()
+            procs.Sellers.add(pks.id)    
+            procs.save()
+            
+    context = {
+        'details':products,
+        'seller':sellers,
+        'ages':ages,
+        'brands':brands,
+        'colors':colors,
+    }        
+
+    return render(request,"seller.html",context)
 
 def signin(request):
     if request.method == 'POST':
       username = request.POST['username']
-      password = request.POST['password']  
+      password = request.POST['password'] 
       user = authenticate(username=username, password=password)
       if user is not None:
         login(request,user)
         fname = user.first_name
-        messages.success(request, "you are logged in successfully")
-        return render(request,'homepage.html',{'fname': fname})
+        messages.success(request,"Helloo "+username+", you are logged in successfully")
+        status = 200
+        return JsonResponse({'status':status})
       else:
-        messages.error(request, "Invalid Credentials!")
-        return redirect('signin')  
-    return render(request,'login.html')
-    
+        ajax = "Invalid Credentials!"
+        status = 400   
+        return JsonResponse({'login':ajax,'status':status}) 
+    return redirect('homepage')
+   
 def signout(request):
     logout(request)
     messages.success(request, "Logged Out Successfully!")
@@ -37,27 +155,30 @@ def home(request):
     return render(request,'homepage.html')
 
 def registration(request):
+    form = RegistrationForm()
     if request.method == "POST":
-        #username = request.POST.get('username')
-        username = request.POST['username']
-        firstname = request.POST['firstname']
-        lastname = request.POST['lastname']
-        email = request.POST['email']
-        gender = request.POST['gender']
-        dob = request.POST['birthdate']
-        telephone = request.POST['telephone']
-        password = request.POST['password']
-        repeatpass = request.POST['repeatpassword']
-        myuser = CustomUser.objects.create_user(username,email,password)
-        myuser.first_name = firstname
-        myuser.last_name = lastname
-        myuser.phone_no = telephone
-        myuser.dob = dob
-        myuser.gender = gender
-        myuser.save() 
-        messages.success(request,"your Account has been successfully created.")
-        return redirect('signin')
-    return render(request,'registration.html')
+        form = RegistrationForm(request.POST)   
+        if form.is_valid():
+           if CustomUser.objects.filter(email=request.POST['email']).exists():
+              messages.error(request,"User with that email already exists")
+              return redirect('registration')
+           else: 
+              user = form.save(commit=False)
+              user.set_password(form.cleaned_data['password'])
+              user.save()
+              messages.success(request,"your Account has been successfully created.\
+                     please Login.")
+              return redirect('login') 
+        else:
+            messages.error(request,"User with that username already exists")     
+            return redirect('registration')    
+    context = {
+       'form':form,
+    }    
+    return render(request,'registration.html',context)
+def profile(request):
+    profile = CustomUser.objects.get(username=request.user) 
+    return render(request,'profile-page.html',{'profile':profile})
 
 def womentab(request):
     card_details = AllFashion.objects.filter(gender="women").all()
@@ -259,6 +380,7 @@ def filter_brands(request):
     card_details = AllFashion.objects.filter(brand__brand=brand_search).all()
     context = fncs.product_filters(card_details,request,'')  
     return JsonResponse(context)
+    
 #When querying a ForeignKey field, you 'normally' pass an instance of the model
 #like this for example,
 # x = MenCategory.objects.get(men=proname) 

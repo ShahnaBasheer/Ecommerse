@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
+
+<style>
+  table,th,td{
+    border: 1px solid black;
+    padding:2px;
+  }
+
+</style>
+</head>
+<body>
+<div class="row">
+<form method="POST" action="{% url 'selleradd' %}">
+  {% csrf_token %}
+  <div class="container col-7">
+    <h2>Seller Register</h2>
+    <label for="seller"><b>Seller</b></label>
+    <input type="text" placeholder="seller name" name="seller" id="seller" required><br>
+
+    <label for="sellerabout"><b>About Seller</b></label>
+    <textarea  placeholder="about seller" name="sellerabout" 
+      style="height:100px;width:600px;" id="sellerabout"></textarea><br>
+    
+    <label for="pros">All products</label>
+    <select id="pros" name="products">
+      <option value="select">Select a product</option>
+      {% for s in details %}
+      <option vaue="{{s}}">{{s}}</option>
+      {% endfor %}
+    </select>    
+
+    <label for="delivery"><b>Delivery Charge</b></label>
+    <input type="number" placeholder="Enter amount" name="delivery" id="delivery"><br>
+    
+    <input type="submit" value="Submit">
+  </div>
+</form>
+
+<form action="{% url 'selleradd' %}" method="POST" id="opo">
+  {% csrf_token %}
+  <div class="container col-7 mt-4">
+    <h1>Register</h1>
+    <hr>
+
+    <label for="brnd"><b>Brand</b></label>
+    <select id="brnd" name="brnd">
+      <option>Select a Brand</option>
+      {% for c in brands %}
+      <option value="{{c}}">{{c}}</option>
+      {% endfor %}
+    </select>    
+    <button  class="btn btn-primary ms-5 mb-3" id="newbrand">Add New Brand</button><br><br>
+    
+    <div class="newbrands" style="display:none;">
+      <label for="brand"><b>Brand</b></label>
+      <input type="text" placeholder="Enter Brand" name="bran" id="brand">
+       <label for="brandabout"><b>About Brand</b></label>
+       <textarea placeholder="About Brand" name="aboutbrand" id="about-brand"
+       style="height:100px;width:600px;""></textarea><br><br>
+    </div>
+    
+    <label for="img">Select image:</label>
+    <input type="file" id="img" name="img" accept="image/*" required><br><br>
+    
+    <label for="cat"><b>Category</b></label>
+    <input type="text" name="category" id="cat" required><br>
+    
+    <label for="genders"><b>Gender</b></label>
+    <select name="gender" id="genders" required>
+      <option value="">Select a gender</option>
+      <option value="women">Women</option>
+      <option value="men">Men</option>
+      <option value="girls">Girls</option>
+      <option value="boys">Boys</option>
+    </select><br>
+
+    <label for="ages"><b>Age</b></label>
+    <select name="age" id="ages" multiple>
+      {% for v in ages %}
+       <option value="{{v}}">{{v}}</option>
+      {% endfor %}
+    </select><br>
+
+    <label for="title"><b>Title</b></label>
+    <input type="text" name="title" id="title" required><br>
+
+    <label for="mate"><b>Material</b></label>
+    <input type="text" name="material" id="mate" required><br>
+
+    <label for="patte"><b>Pattern</b></label>
+    <input type="text" name="pattern" id="patte" required><br>
+
+    <label for="pocket"><b>Pocket</b></label>
+    <input type="text" name="pocket" id="pocket"><br>
+
+    <label for="Sleeves"><b>Sleeves</b></label>
+    <input type="text" name="sleeves" id="Sleeves"><br>
+
+    <label for="Neck"><b>Neck</b></label>
+    <input type="text" name="neck" id="Neck"><br>
+
+    <label for="Occasion"><b>Occasion</b></label>
+    <input type="text" name="occasion" id="Occasion" required><br>
+
+    <label for="package"><b>Packet_Contains</b></label>
+    <input type="text" name="package" id="package" required><br>
+    
+    <label for="stretch">Stretchable</label>
+    <select id="stretch" name="Stretchable">
+      <option value=''>select stretchable</option>
+      <option value="True">Yes</option>
+      <option value="False">No</option>
+    </select> 
+
+    <label for="care"><b>Care_instructions</b></label>
+    <textarea name="care" id="care"></textarea><br>
+
+    <label for="descrp"><b>Descriptions</b></label>
+    <textarea name="description" id="descrp" required></textarea><br>
+
+    <label for="country"><b>Country</b></label>
+    <input type="text" name="country" id="country" required><br>
+    
+    <label for="rise"><b>Rise</b></label>
+    <select id="rise" name="rise">
+      <option>Select Rise</option>
+      <option value="select" v>Select a Rise</option>
+      <option value="Mid Waist">Mid Waist</option>
+      <option value="Low Waist">Low Waist</option>
+      <option value="High Waist">High Waist</option>
+    </select><br>
+    
+    <label for="manufacture"><b>Manufacture</b></label>
+    <textarea name="manufacture" id="manufacture" required></textarea><br>
+    
+    <label for="sell"><b>Seller</b></label>
+    <select id="sell" name="sell" required>
+         <option value="select">Select a Seller</option>
+       {% for p in seller%}
+         <option value="{{p}}">{{p}}</option>
+       {% endfor %}>
+    </select><br><br>   
+    
+    <label for="datas" style="margin-top:20px;">select a size:</label>
+    <select id="datas" required>
+      <option value="select">Select sizes</option>
+      <option value="XS">XS</option>
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+      <option value="2XL">2XL</option>
+      <option value="3XL">3XL</option>
+      <option value="4XL">4XL</option>
+      <option value="fs">Free Size</option>
+    </select>
+    <table id="myTable"style="margin-bottom:20px;margin-top:20px;" >
+      <tr>
+        <th>SIZE</th>
+        <th>PRICE</th>
+        <th>MRP</th>
+        <th>STOCK</th>
+      </tr>
+    </table>
+        
+    <label for="del"><b>Delivery Charge</b></label>
+    <input type="text" placeholder="Enter amount" name="deli" id="del" required><br>
+
+    <label for="speci"><b>Specification</b></label>
+    <input type="text" placeholder="Enter specify" name="speci" id="speci" required><br>
+
+    <label for="ret"><b>Return</b></label>
+    <input type="text" placeholder="Enter return" name="return" id="ret" required><br>
+
+    <label for="color"><b>Colors</b></label>
+    <select id="color" name="color" multiple>
+        <option>Select Colors</option>
+      {% for i in colors %}
+        <option value="{{i}}">{{i}}</option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-primary btn-sm" id="newcolors">Add Colors</button><br><br>
+    
+    <div id="newcolr" style="display:none;">
+      <label for="colors"><b>Colors</b></label>
+      <input type="text" name="colors" id="colors" multiple>
+    </div>
+    
+    <button type="submit" class="registerbtn mt-3">Register</button>
+  </div>
+
+</form>
+
+</div>
+<script>
+  $(document).ready(function(){
+    $(document).on("change","#datas",function(){
+       let s = $(this).val();
+       let table = $("#myTable");
+       table.append( '<tr><td>'+s+'</td>'+'<input type="hidden" value='
+        +'"'+s+'"'+'name="'+s+'"><td><input type="text" placeholder="price" name='
+        +s+'_price></td><td><input type="text" placeholder="mrp" name='
+        +s+'_mrp></td><td><input type="text" placeholder="stock" name='
+        +s+'_stock></td></tr>');
+    
+    });
+    $("#newbrand").click(function(){
+      $(".newbrands").toggle();
+      $(this).text("Remove New Brand")
+    })
+    $("#newcolors").click(function(){
+      $("#newcolr").toggle();
+      $(this).text("Remove")
+    })
+});
+</script>
+</body>
+</html>

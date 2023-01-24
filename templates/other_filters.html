@@ -1,3 +1,4 @@
+
 <div class="accordion-item">
    {% if value|length == 0 %}
    {% else %}
@@ -11,24 +12,16 @@
       <div id="filter_{{key}}" class="accordion-collapse collapse" 
               aria-labelledby="{{key}}_heading">
          <div class="accordion-body">
-           <div class="px-3 {{key}}">
-             {% if key == 'discount' %}
-               {% for v in value %}
-                  <div class="d-flex justify-content-between pb-2">
-                    <label for="{{key}}{{forloop.counter}}">{{v.pro}} ({{v.count}})</label>
-                    <input type="radio" id="{{key}}{{forloop.counter}}" data-gender="{{gender}}"
-                       data-filter="{{key}}" class="filter-radio" value="{{v.pro}}" name="gender">
-                  </div>
-               {% endfor %}   
-             {% else %}
+           <div class="px-3 {{key}}">  
                {% for v in value %}           
                   <div class="d-flex justify-content-between pb-2">
                     <label for="{{key}}{{forloop.counter}}">{{v.pro}} ({{v.count}})</label>
-                    <input type="checkbox" id="{{key}}{{forloop.counter}}" data-gender="{{gender}}"
-                       data-filter="{{key}}" class="filter-checkbox" value="{{v.pro}}">
+                    <input id="{{key}}{{forloop.counter}}" data-gender="{{gender}}"
+                       data-filter="{{key}}" {% if key == 'discount' %}class="filter-radio"
+                       type="radio" {% else %} class="filter-checkbox" type="checkbox"
+                       {% endif %} value="{{v.pro}}">
                   </div>           
                {% endfor %}   
-             {% endif %}
            </div> 
          </div>
       </div>

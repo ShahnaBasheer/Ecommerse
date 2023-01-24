@@ -1,58 +1,48 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Login Page</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://kit.fontawesome.com/0cfdca5d54.js" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
-  </head>
-  <body class="d-flex align-items-center justify-content-center">
 
-    <div class="bg-white login row align-items-center rounded-3">
-      <div class="text-center col mx-auto">
-        <h4>Login in to Snapquick</h4>
-
-        <form action="" method="POST" class="p-1">
-          {% csrf_token %}
-              <div class="mb-4 mt-3">
-                <label for="user_name" class="pb-2 fw-bold d-block">USERNAME</label>
-                <input type="text" placeholder="Enter Your Username"  id="user_name"
-                  name="username" required>
-              </div>
-              <div class="mb-1">
-                <label for="passwrd" class="pb-2 fw-bold d-block">PASSWORD</label>
-                <input type="password" placeholder="Enter Your Password" id="passwrd"
-                   name="password" minlength="3" maxlength="30" required>
-              </div>
-              <div class="mb-4 row">
-                <div class="col">
-                  <input type="checkbox" checked="checked" name="remember" id="remember">
-                  <label for="remember" class="remem">Remember me</label>
+<!-- Modal -->
+    <div class="modal fade" id="modalLoginForm" tabindex="-1" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header text-center py-4">
+              <h4 class="modal-title w-100 fw-bolder">Login Into Snapquick</h4>
+              <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" 
+                aria-label="Close"></button>
+            </div>  
+              <div class="modal-body m-3 loginform text-center">
+                 <div class="mb-5">
+                    <label for="user_name" class="form-label">
+                      <i class="fas fa-user prefix"></i></label>
+                    <input type="text" placeholder="Your Username" id="user_name"
+                      class="w-75"
+                      name="username" class="form-control" required>
+                 </div>
+                 <div class="mb-2">
+                    <label for="passwrd" class="form-label">
+                     <i class="fas fa-envelope prefix"></i></label>
+                    <input type="password" placeholder="Your Password" id="passwrd"
+                       class="w-75"  autocomplete
+                       name="password" minlength="2" maxlength="30" required>
+                 </div>
+                 <div class="mb-4 row">
+                   <div class="col-7">
+                     <input type="checkbox" checked="checked" name="remember" id="remember">
+                     <label for="remember" class="remem form-label">
+                      <small>Remember me</small></label>
+                   </div>
+                   <div class="col-5 forgot text-primary"><small>Forgot Password?</small></div>
+                 </div>
+                 <div id="errormess">
+                 
                 </div>
-                <div class="col forgot text-primary">Forgot Password?</div>
-              </div>
-
-            {% for message in messages %}
-              <div class="alert alert-danger alert-dismissible p-1 fade show mb-3">
-                 <strong>{{ message }}</strong>
-                 <button type="button" class="btn-close p-2" data-bs-dismiss="alert"></button>
-              </div>
-            {% endfor %}
-
-              <input type="submit" value="Login" class="submit btn mt-4 mb-3">
-              <div>
-                <a href="{% url 'registration' %}" class="text-decoration-none sign">New to Fashion? Sign Up here</a>
-              </div>          
-          </form>
-
-      </div>       
+                 <div class="mb-4">
+                     <button class="btn btn-primary" type="submit">LOGIN</button>
+                     <div class="pt-2"><small>New to Fashion?</small>
+                        <a href="{% url 'registration' %}" class="text-decoration-none sign">
+                           <small>Sign Up here</small></a>
+                    </div> 
+                 </div>
+              </div> 
+          </div>
+        </div>
     </div>
-  </body>
-</html>

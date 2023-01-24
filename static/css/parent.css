@@ -16,18 +16,16 @@ body{
   font-size: 1rem;
   box-shadow: 2px 2px 3px #4b2230;
 }
+
 .navbar-brand{
   font-family: 'Comfortaa', cursive;
   text-shadow: 4px 0px 5px rgba(10, 0, 0, 0.84),1px -2px 1px rgba(70, 15, 66, 1);
 }
-.navbar-expand-md .navbar-nav .nav-link{
+.navbar-expand-lg .navbar-nav .nav-link{
   padding:.5rem 1.5rem;
   font-size: 1rem;  
 }
-.navbar-expand-sm .navbar-nav .nav-link:hover{
-  background-color:white;
-  color:black !important;
-}
+
 .navbar-toggler:focus{
   box-shadow:0 0 0  0.1rem;
 }
@@ -82,28 +80,67 @@ ul.brand.dropdown-menu input {
 .cart-qnty{
   background-color:#DADBDD ;/*#00A4CCFF*/
 }
+.fa-cart-shopping span{
+  background-color: #3162c4 !important;
+}
 .homecategory{
 background-color: #DADBDD;  
+}
+.homepagecont{
+  margin-top:70px;
+}
+.loginform input:not([type=checkbox]){
+   /*#993366*/
+   border:none;
+   border-bottom:1px solid rgb(151, 151, 151);  
+  }
+.loginform input:focus,.loginform input:active{
+  outline:none;
+  border-bottom:2px solid rgb(106, 142, 206);
+  }
+.loginform input:-internal-autofill-selected{
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0), inset 0 0 0 100px rgba(255, 255, 255,1);
+  }
+#modalLoginForm .modal-header{
+  /*background-color: #a00854;*/
+  background-image: linear-gradient(#993366,#660033);
+  color:white;
 }
 footer{
   display:none;
   font-size: 16px;
+  background-image: linear-gradient(#993366,#660033);
 }
 
-@media(max-width:767px){
+@media(max-width:662px){
   .navbar .container{
     justify-content: space-between;
   }
   .navbar-brand{order:2;}
+  .searchall{order:4;width:70%;margin:auto;left:-20px}
   .cartbutton{order:3;}
-  .navbar .navbar-collapse{order:4;}
+  .navbar .navbar-collapse{order:5;}
   .userlogin{display:none;} 
-  .copyright{
-     margin-bottom: 47px;
-  }
-   footer{
+  .copyright{margin-bottom: 47px;}
+  
+  .homepagecont{
+    margin-top:90px;
+  }  
+}
+@media(max-width:768px){
+  footer.allpage{
     display:block;
   }
+}
+@media(max-width:992px) and (min-width:662px){
+  .navbar .container{
+    justify-content: space-between;
+  }
+  .navbar-brand{order:2;}
+  .searchall{order:3;margin:auto;}
+  .cartbutton{order:4;}
+  .navbar .navbar-collapse{order:5;}
+  .userlogin{display:none;}
 }
 .homeimg{
   width:100%;
@@ -112,13 +149,25 @@ footer{
   background-color: rgba(0, 0, 0, 0.714);
 }
 .copyright{
-  background-color: rgb(200, 81, 87);
+  /*background-color: rgb(200, 81, 87);*/
+  background-color: #4670c4;
   font-size: 14px;
   padding:10px 0px;
   color: white;
 }
 
 /* homepage.html */
+
+.filters input[type]{
+  width:18px;
+  accent-color:black;
+}
+.filters label{
+ font-size: 15px;
+}
+.filters form div {
+ padding-bottom:12px;
+}
 
 .contact{
   color:white;
@@ -129,4 +178,3 @@ footer{
 .contact p,.mail address{
   font-size: 14.5px;
 }
-

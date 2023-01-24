@@ -17,7 +17,7 @@ products
       </div>
       <div class="col-5 py-4">
         <div class="productinfo">
-            <h6 class="brandinfo">{{details.brand.brand}}</h6>
+            <h6 class="brandinfo">{{details.brand}}</h6>
             <h6 class="pb-3 titlename">{{details.title}}</h6>
             <p class="price fw-bolder">₹{{q.specifications.price}}
               {{s.price}} <span class="ms-3 offer fs-6">
@@ -29,7 +29,7 @@ products
             {% if sizeall %}
 
               <div class="py-3"> 
-                <h5 class="pb-2 text-decoration-underline selectsize">Select Size<h5
+                <h5 class="pb-2 text-decoration-underline selectsize">Select Size<h5>
                 <ul id="sizes" class="list-inline-item list-unstyled">
                    {% include 'size-selected.html' %}
                 </ul>

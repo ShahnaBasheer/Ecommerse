@@ -11,9 +11,9 @@ from django.contrib.auth.models import AbstractUser
 User = settings.AUTH_USER_MODEL
 
 class CustomUser(AbstractUser):
-   dob = models.DateField(auto_now=False, auto_now_add=False,null=True,blank=True)
-   phone_no = models.IntegerField(null=True,blank=True)
-   gender = models.CharField(max_length=50,null=True,blank=True)
+   dob = models.DateField(null=True)
+   phone_no = models.CharField(max_length=50,null=True,blank=True)
+   gender = models.CharField(max_length=50,null=True)
 
 PRODUCT_SIZES = [
    ("XS","XS"),
@@ -77,7 +77,7 @@ class Size(models.Model):
    price = models.IntegerField()
    mrp = models.IntegerField(default=0)
    discount = models.CharField(max_length=100,null=True,blank=True)
-   discnt_cat = models.CharField(max_length=100,default="Below 10%")
+   discnt_cat = models.CharField(max_length=100,default="Below 10%",blank=True)
    stock = models.IntegerField()
    def save(self, force_insert = False, force_update = True, using = False):
       self.discount = math.floor((self.mrp - self.price)/self.mrp * 100)
@@ -100,19 +100,19 @@ class Size(models.Model):
    
 class Brand(models.Model):
    brand = models.CharField(max_length=255,unique=True)
-   about = models.TextField(null=True,blank=True)
+   about = models.TextField(null=True)
    def __str__(self):
       return self.brand
 
 class Seller(models.Model):
    seller = models.CharField(max_length=100,unique=True)
-   about_us = models.TextField(null=True,blank=True)
+   about_us = models.TextField(null=True)
    join_date = models.DateTimeField(auto_now_add=datetime.now())
    def __str__(self):
       return self.seller
 
 class AllFashion(models.Model):
-   Products = models.OneToOneField('ecommapp.ProductInfo',on_delete=models.CASCADE,related_name='pros')
+   Products = models.OneToOneField('ecommapp.ProductInfo',on_delete=models.CASCADE,related_name='pros',null=True)
    Sellers = models.ManyToManyField('ecommapp.Seller_Product',related_name='selling_products')
    slug = models.SlugField(max_length=250,null=False, unique=True)
    gender = models.CharField(choices=GENDER_CHOICES, max_length=50)
@@ -131,18 +131,17 @@ class AllFashion(models.Model):
        return self.title
 
 class ProductInfo(models.Model):
-   Type = models.CharField(max_length=255,verbose_name='Type')
    Material = models.CharField(max_length=255,verbose_name='Material')
    Pattern = models.CharField(max_length=255,verbose_name='Pattern')
-   Pocket = models.CharField(max_length=255,null=True,blank=True,verbose_name='Pocket')
-   Sleeves = models.CharField(max_length=255,null=True,blank=True,verbose_name='Sleeves')
+   Pocket = models.CharField(max_length=255,null=True,verbose_name='Pocket',blank=True)
+   Sleeves = models.CharField(max_length=255,null=True,verbose_name='Sleeves',blank=True)
    Color = models.ManyToManyField(Color,verbose_name='Color')
-   Neck = models.CharField(max_length=255,null=True,blank=True,verbose_name='Neck')
+   Neck = models.CharField(max_length=255,null=True,verbose_name='Neck',blank=True)
    Packet_Contains = models.CharField(max_length=100,null=True,verbose_name="Packet Contains")
    Occasion = models.CharField(max_length=255)
-   Rise = models.CharField(choices=RISE_CHOICE,max_length=50,null=True,blank=True,verbose_name="Rise")
-   Stretchable = models.BooleanField(null=True,blank=True,verbose_name="Stretchable")
-   Care_instructions = models.CharField(max_length=200,null=True,blank=True,verbose_name="Care Instructions")
+   Rise = models.CharField(choices=RISE_CHOICE,max_length=50,null=True,verbose_name="Rise",blank=True)
+   Stretchable = models.BooleanField(null=True,verbose_name="Stretchable",blank=True)
+   Care_instructions = models.CharField(max_length=200,null=True,verbose_name="Care Instructions")
    Descriptions = models.TextField(null=True,verbose_name="Descriptions")
    Country = models.CharField(max_length=50,default="India")
    Manufacture = models.CharField(max_length=1000,null=True)

@@ -10,15 +10,16 @@
     <script src="https://kit.fontawesome.com/0cfdca5d54.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static '/css/parent.css' %}">
     {% block newcss %}{% endblock %}
+    
   </head>
   <body>
       
       <!--navigation bar-->
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top">
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
          <div class="container-fluid">
             <a class="navbar-brand" href="{% url 'homepage'%}">SnapQuick</a>
             <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menus">
@@ -68,8 +69,7 @@
                         href="{% url 'search_all' %}?search={{item}}&searchType=AutomateSearch">{{item}}</a></li>
                      {% endfor %}
                   </ul>
-                  </div>
-                  
+                  </div>   
                </form>
             </div>
             <div class="dropdown">
@@ -79,27 +79,45 @@
               </a>
                <ul class="user dropdown-menu" aria-labelledby="dropdownMenu">
                {% if user.is_authenticated %}
-                 <li><a class="dropdown-item" href="{% url 'signout' %}">Logout</a></li>
+                 <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                {% else %}
-                 <li><a class="dropdown-item" href="{% url 'signin' %}">Login/Signup Now</a></li>
+                 <li><a class="dropdown-item" href="" data-bs-toggle="modal" 
+                    data-bs-target="#modalLoginForm">Login/Signup Now</a></li>                      
                {% endif %}
+               {% if user.is_super == admin %}
+                 <li><a class="dropdown-item" href="{% url 'selleradd' %}">Orders</a></li>
+               {% else %}
                  <li><a class="dropdown-item" href="#">Orders</a></li>
+               {% endif %}
                </ul>
             </div>
-            <a class="text-white cartbutton text-decoration-none" href="{% url 'cart' %}">
-               <span class="cart-qnty badge rounded-pill text-body">{{quantity}}</span>
+            <!--<a class="text-white cartbutton text-decoration-none" href="{% url 'cart' %}">
+               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary">{{quantity}}</span>
                <i class="fa-solid fa-cart-shopping"></i>
+            </a>-->
+            <a class="text-white cartbutton text-decoration-none me-3" href="{% url 'cart' %}">
+               <i class="fa-solid fa-cart-shopping position-relative pt-2">
+                  <span class="position-absolute top-0
+                  start-100 translate-middle badge rounded-pill 
+                  bg-secondary">{{quantity}}</span>
+               </i>
             </a>
          </div>
-      </nav> 
-
+      </nav>
+      <form action="" method="POST" id="login">
+         {% csrf_token %}
+         <div id="formdata">
+           {% include 'login.html' %}
+         </div>
+      </form>
       {% block categories %}
       {% endblock %} 
 
       <div class="contactbottom">
-        <div class="contact d-flex justify-content-evenly py-4">
+        <div class="contact d-flex justify-content-evenly p-4">
             <div class="help">
-                <h6>HELP</h6>
+                
+                <h6>HELP</h6>                
                 <p>About Us</p>
                 <p>Shipping & Return Policy</p>
                 <p>Help Center</p>
@@ -110,7 +128,7 @@
             <div class="mail">
                  <h6>Mail Us:</h6>
                  <address>
-                  Fashion Internet (Pvt)Ltd<br>
+                  SnapQuick Internet (Pvt)Ltd<br>
                   Buildings Alyssa, Begonia<br>
                   Clove Embassy Tech Village,<br>
                   Outer Ring Road,<br>
@@ -126,6 +144,22 @@
          </div>
          <div class="text-center copyright">© 2019 - 2022 Fashion Pvt.Ltd. All Rights Reserved</div>
       </div>
+      
+      
+
+      <footer class="footer allpage fixed-bottom text-center">
+         <div class="row">
+            <div class="col-6">
+               <a class="text-white text-decoration-none" data-bs-target="#modalFilter"
+                  data-bs-toggle="modal"><i class="fa-sharp fa-solid fa-filter"></i><br>Filters</a>
+            </div>
+            <div class="col-6">
+               <a class="text-white text-decoration-none" {% if user.is_authenticated %} 
+                 href="{% url 'user_profile' %}"{% else %} href="#"data-bs-toggle='modal'
+                 data-bs-target='#modalLoginForm' {% endif %}>
+                  <i class="fa-sharp fa-solid fa-user"></i><br>Account</a>
+            </div>  
+      </footer>
       {% block newjs %}{% endblock %}
       <script src="{% static 'js/interactions.js' %}"></script>
   </body>

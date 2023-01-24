@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block newcss %}
-   <link rel="stylesheet" href="{% static 'css/products.css' %}"> 
+   <link rel="stylesheet" href="{% static 'css/products.css' %}">
+   <link rel="stylesheet" href="{% static 'css/filter_s.css' %}" media="screen and (max-width: 768px)">
+   <link rel="stylesheet" href="{% static 'css/filter_md.css' %}" media="screen and (min-width:768px)">  
 {% endblock %}
 
 
@@ -16,22 +18,24 @@ Shop Your Favourite Fashions
    <!-- Products-->
    <div class="mx-4 my-5 searchpage">
     <div class="row">
-       <div class="col-md-3 filterscontainer">
-          <div class="filters">
-             <h5>Filters</h5>
-
-             <div class="all_filters">
-               <div class="accordion accordion-flush" id="filt_accordion">
-                {% for key,value in allproducts.items %}
-                   <div id="{{key}}box" class="allfilts">
-                      {% include 'other_filters.html' %}
-                   </div>
-                {% endfor %}
-               </div>     
+       <div class="col-md-3 d-mb-block">
+         <div class="filterscontainer">
+            <div class="filters">
+               <h5>Filters</h5>
+  
+               <div class="all_filters">
+                 <div class="accordion accordion-flush" id="filt_accordion">
+                  {% for key,value in allproducts.items %}
+                     <div id="{{key}}box" class="allfilts">
+                        {% include 'other_filters.html' %}
+                     </div>
+                  {% endfor %}
+                 </div>     
+              </div>
+              <input type="hidden" id="searchvalue" value="{{search}}">
+              <input type="hidden" id="searchtype" value="{{search_Type}}">
             </div>
-            <input type="hidden" id="searchvalue" value="{{search}}">
-            <input type="hidden" id="searchtype" value="{{search_Type}}">
-          </div>
+         </div>
        </div>  
        
        <!-- All products images-->

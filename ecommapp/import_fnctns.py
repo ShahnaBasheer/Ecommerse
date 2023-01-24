@@ -158,7 +158,7 @@ def product_filters(*args):
         if x == checked_lists:
            continue
         value = render_to_string('other_filters.html',{'value':y,'key':x,'gender':args[2]})
-        filters[x] = value  
+        filters[x] = value
     ajax = render_to_string('cards.html', {'details': card_details}) 
     json_str = json.dumps(card_details.count())
     return {'details':ajax,'filter':filters,'count':json_str}
