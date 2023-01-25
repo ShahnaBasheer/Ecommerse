@@ -9,19 +9,39 @@
 
 
 {% block title %}
-Men Fashions
+{{gender|capfirst}} Fashions
 {% endblock %}
 
 {% block categories %}
-    {% include 'sortby.html' with heading="Men" %}
+    {% include 'sortby.html' %}
    
    <!-- Products-->
-   <div class="mx-4 menpage">
+   <div class="mx-4">
       <div class="row">
          <div class="col-md-3 d-md-block">
             <div class="filterscontainer ">
                <div class="filters">
                   <h5>Filters</h5>
+
+                  {% if gender == "kids" %}
+                    <div class="filtbox p-2 mb-2">
+                       <h6 class="fw-bold">Gender</h6>
+                       <div class="px-3">
+                          <div class="d-flex justify-content-between pb-2">
+                             <label for="girls">Girls</label>
+                             <input type="radio" id="girls" value="girls" 
+                                class="filter-radio" name="gender" 
+                                data-filter="gender" data-gender="kids">
+                          </div>
+                          <div class="d-flex justify-content-between pb-2">
+                             <label for="boys">Boys</label>
+                             <input type="radio" id="boys" value="boys" 
+                                 class="filter-radio" name="gender" 
+                                 data-filter="gender" data-gender="kids">
+                          </div>   
+                       </div>
+                     </div>
+                  {% endif %}
                   
                   <div class="all_filters">
                      <div class="accordion accordion-flush" id="filt_accordion">

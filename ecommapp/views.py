@@ -20,7 +20,6 @@ from ecommapp import models
 
 
 def signin(request):
-    print("yes")
     if request.method == 'POST':
       username = request.POST['username']
       password = request.POST['password'] 
@@ -74,19 +73,19 @@ def profile(request):
 def womentab(request):
     card_details = AllFashion.objects.filter(gender="women").all()
     context = fncs.product_page(card_details,"women")
-    return render(request,'women.html',context)
+    return render(request,'gender-category.html',context)
 
 def mentab(request):
     card_details = AllFashion.objects.filter(gender="men").all()
     context = fncs.product_page(card_details,"men")
-    return render(request,'men.html',context)
+    return render(request,'gender-category.html',context)
 
 def kidstab(request):
     card_details = AllFashion.objects.filter(Q(gender='girls') | Q(gender='boys')).all()
     kids_age = card_details.values(pro=F('age__age')).annotate(count=Count('age'))
     context = fncs.product_page(card_details,"kids")
     context['allproducts']['age'] = kids_age
-    return render(request,'kids.html',context)
+    return render(request,'gender-category.html',context)
 
 def filter_women(request):
     card_details = AllFashion.objects.filter(gender="women").all()
