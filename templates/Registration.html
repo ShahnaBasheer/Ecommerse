@@ -11,7 +11,36 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script> 
-    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <style>
+      *{
+        box-sizing: border-box;
+      }
+      
+      html{
+        height:880px; /*background-color: #f0ea80; lightcoral */
+      }
+      body{
+        background-image: linear-gradient(#660033,#993366);
+        height:100vh;
+      }
+      .submit{
+        /*background-color: #3162c4;*/
+        background: linear-gradient(to bottom, #336699 0%, #003366 100%);
+        color:white;
+        border:none;
+      }
+      
+      .submit.btn:focus,.submit.btn:active:focus,.btn-check:focus+.btn{
+        box-shadow:none;
+      }
+      
+      /* Registration */
+      
+      .card.register{ 
+        border-radius:15px;
+        box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+      }
+    </style>
   </head>
   <body>  
       {% load crispy_forms_tags %}  

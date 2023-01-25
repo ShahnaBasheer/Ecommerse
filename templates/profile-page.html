@@ -17,8 +17,12 @@
     
   </head>
   <body>
-     <a href="{% url 'homepage' %}"><i class="fa-solid fa-arrow-left-long fs-4 text-dark"></i></a>
-     <h1 class="text-center mt-4 mb-5">Hiii {{profile.first_name}} {{profile.last_name}},</h1>  
+    <div class="d-flex justify-content-between">
+      <a href="{% url 'homepage' %}"><i class="fa-solid fa-arrow-left-long fs-4 text-dark"></i></a>
+      <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">LOGOUT</a>  
+    </div> 
+     <h1 class="text-center mt-4 mb-5">Hiii {{profile.first_name}} {{profile.last_name}},</h1>
+     
      <h5>PROFILE</h5>
      <div class="profileinfo">
         <p>Username:{{profile.username}}</p>
@@ -26,7 +30,7 @@
         <p>BirthDate:{{profile.dob}}</p>
         <p>Email Address: {{profile.email}}</p>
         <p>Mobile Number: {{profile.phone_no}}</p>
-        <p>Password: {{profile.password}}</p>
+
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#PersonalInfo">Update Profile</button>      
      </div>
      <div class="modal fade" id="PersonalInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -73,7 +77,7 @@
         <h5>Chat with us</h5>
         <p>Get help from FAQs or raise a concern</p>
      </div>
-     <a href="{% url 'logout' %}" class="btn btn-warning">LOGOUT</a>
+     
      <footer class="p-3 bg-dark text-white text-center">SNAPQUICK</footer>
   </body>
 </html> 

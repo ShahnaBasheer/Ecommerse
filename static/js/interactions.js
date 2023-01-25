@@ -103,7 +103,7 @@ $(document).ready(function(){
       e.preventDefault(); 
       $.ajax({
          type:'POST',
-         url:'accounts/login/',
+         url:'/accounts/login/',
          data: $(this).serialize(),
          dataType:'json',
          success:function(response){

@@ -17,16 +17,9 @@
 {% endblock %}
 
 {% block categories %}
-    <div class="container-fluid bg-white homepagecont">
-
-      {% for message in messages %}
-       <div class="alert alert-{{message.tags}} alert-dismissible mt-3 fade show p-1" role="alert">
-         <strong>{{ message }}</strong> 
-         <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close"></button>
-       </div>
-      {% endfor %}
+    <div class="container-fluid bg-white homepagecont pt-2">
        <div class="imgcontainer">
-         <img src="{% static 'images/fashionremini.jpg' %}" alt="homepage_image" class="homeimg">
+         <img src="{% static 'images/fashionremini1.jpg' %}" alt="homepage_image" class="homeimg">
        </div>   
     </div>
     

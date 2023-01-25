@@ -19,117 +19,8 @@ from ecommapp import models
 # Create your views here.
 
 
-def selleradd(request):
-    products = AllFashion.objects.all()
-    proinfo = ProductInfo.objects.all()
-    brands = Brand.objects.all()
-    ages = KidsAge.objects.all()
-    colors = Color.objects.all()
-    sellers = Seller.objects.all()
-     
-    if request.method == 'POST':
-        bran = request.POST.get('bran')
-        b_about = request.POST.get('aboutbrand')
-        cat = request.POST.get('category')
-        gender = request.POST.get('gender') 
-        age = request.POST.getlist('age')    
-        title = request.POST.get('title')    
-        material = request.POST.get('material')    
-        pattern = request.POST.get('pattern')    
-        pocket = request.POST.get('pocket')    
-        sleeves = request.POST.get('sleeves')    
-        neck = request.POST.get('neck')    
-        occasion = request.POST.get('occasion')    
-        package = request.POST.get('package')
-        rise = request.POST.get('rise')    
-        care = request.POST.get('care')    
-        description = request.POST.get('description')    
-        country = request.POST.get('country')
-        manufacture = request.POST.get('manufacture')
-        sell = request.POST.get('sell')
-        img = request.POST.get('img')
-        s = request.POST.get('S')
-        xs = request.POST.get('XS')
-        m = request.POST.get('M')
-        l = request.POST.get('L')
-        xl = request.POST.get('XL')
-        xl2 = request.POST.get('2XL')
-        xl3 = request.POST.get('3XL')
-        xl4 = request.POST.get('4XL')
-        freesize = request.POST.get('fs')
-        brnd =request.POST.get('brnd')      
-        deliv = request.POST.get('deli')
-        speci = request.POST.get('speci') 
-        retu = request.POST.get('return')  
-        color = request.POST.getlist('color[]')
-        clr = request.POST.getlist('colors[]')
-        stretch = request.POST.get('Stretchable')
-        rr = [i for i in [s,xs,m,l,xl,xl2,xl3,xl4,freesize] if i!=None]
-          
-        if 'seller' in request.POST and 'sellerabout':
-            seller = request.POST.get('seller')
-            s_about = request.POST.get('sellerabout')
-            s_details,created = Seller.objects.get_or_create(seller=seller,about_us=s_about)
-            s_details.save()
-
-        br = brands.get(brand=brnd)
-        if 'title' in request.POST:
-            if brnd == False:
-                br = brands.create(brand=bran,about=b_about) 
-            br.save()         
-            
-            procs = products.create(gender=gender,title=title,brand=br,
-                        category=cat,card_image=img)
-            produinfo = proinfo.create(Material=material,
-                        Pattern=pattern,Pocket=pocket,Sleeves=sleeves,Neck=neck,
-                        Packet_Contains=package,Occasion=occasion,Rise=rise,
-                        Stretchable=stretch,Care_instructions=care,Descriptions=description,
-                        Country=country,Manufacture=manufacture)
-            procs.Products = produinfo
-            
-            clrs = color
-            if clr != []:    
-              clrs = clr
-            for f in clrs:
-               colr = colors.get_or_create(color=f)
-               produinfo.Color.set([colr])
-               colr.save()      
-
-
-            for q in age:
-               kids_age = ages.get(age=q)   
-               procs.age.set([kids_age])      
-            sp = sellers.get(seller=sell)                        
-            pks = procs.Sellers.create(seller=sp,Return=retu,dlvry_charges=deliv)
-
-            for i in rr:
-                v = int(request.POST.get(i+"_price"))
-                b = int(request.POST.get(i+"_mrp"))
-                n = int(request.POST.get(i+"_stock"))
-                if i == 'fs':
-                  i = 'Free Size'
-                s = Size.objects.create(sizes=i,price=v,mrp=b,stock=n)
-                s.save()
-                pks.size.add(s.id)
-                if i == speci:
-                   pks.specifications = s 
-                pks.save()    
-            br.save()          
-            produinfo.save()
-            procs.Sellers.add(pks.id)    
-            procs.save()
-            
-    context = {
-        'details':products,
-        'seller':sellers,
-        'ages':ages,
-        'brands':brands,
-        'colors':colors,
-    }        
-
-    return render(request,"seller.html",context)
-
 def signin(request):
+    print("yes")
     if request.method == 'POST':
       username = request.POST['username']
       password = request.POST['password'] 
@@ -380,7 +271,117 @@ def filter_brands(request):
     card_details = AllFashion.objects.filter(brand__brand=brand_search).all()
     context = fncs.product_filters(card_details,request,'')  
     return JsonResponse(context)
-    
+
+def selleradd(request):
+    products = AllFashion.objects.all()
+    proinfo = ProductInfo.objects.all()
+    brands = Brand.objects.all()
+    ages = KidsAge.objects.all()
+    colors = Color.objects.all()
+    sellers = Seller.objects.all()
+     
+    if request.method == 'POST':
+        bran = request.POST.get('bran')
+        b_about = request.POST.get('aboutbrand')
+        cat = request.POST.get('category')
+        gender = request.POST.get('gender') 
+        age = request.POST.getlist('age')    
+        title = request.POST.get('title')    
+        material = request.POST.get('material')    
+        pattern = request.POST.get('pattern')    
+        pocket = request.POST.get('pocket')    
+        sleeves = request.POST.get('sleeves')    
+        neck = request.POST.get('neck')    
+        occasion = request.POST.get('occasion')    
+        package = request.POST.get('package')
+        rise = request.POST.get('rise')    
+        care = request.POST.get('care')    
+        description = request.POST.get('description')    
+        country = request.POST.get('country')
+        manufacture = request.POST.get('manufacture')
+        sell = request.POST.get('sell')
+        img = request.POST.get('img')
+        s = request.POST.get('S')
+        xs = request.POST.get('XS')
+        m = request.POST.get('M')
+        l = request.POST.get('L')
+        xl = request.POST.get('XL')
+        xl2 = request.POST.get('2XL')
+        xl3 = request.POST.get('3XL')
+        xl4 = request.POST.get('4XL')
+        freesize = request.POST.get('fs')
+        brnd =request.POST.get('brnd')      
+        deliv = request.POST.get('deli')
+        speci = request.POST.get('speci') 
+        retu = request.POST.get('return')  
+        color = request.POST.getlist('color[]')
+        clr = request.POST.getlist('colors[]')
+        stretch = request.POST.get('Stretchable')
+        rr = [i for i in [s,xs,m,l,xl,xl2,xl3,xl4,freesize] if i!=None]
+          
+        if 'seller' in request.POST and 'sellerabout':
+            seller = request.POST.get('seller')
+            s_about = request.POST.get('sellerabout')
+            s_details,created = Seller.objects.get_or_create(seller=seller,about_us=s_about)
+            s_details.save()
+
+        br = brands.get(brand=brnd)
+        if 'title' in request.POST:
+            if brnd == False:
+                br = brands.create(brand=bran,about=b_about) 
+            br.save()         
+            
+            procs = products.create(gender=gender,title=title,brand=br,
+                        category=cat,card_image=img)
+            produinfo = proinfo.create(Material=material,
+                        Pattern=pattern,Pocket=pocket,Sleeves=sleeves,Neck=neck,
+                        Packet_Contains=package,Occasion=occasion,Rise=rise,
+                        Stretchable=stretch,Care_instructions=care,Descriptions=description,
+                        Country=country,Manufacture=manufacture)
+            procs.Products = produinfo
+            
+            clrs = color
+            if clr != []:    
+              clrs = clr
+            for f in clrs:
+               colr = colors.get_or_create(color=f)
+               produinfo.Color.set([colr])
+               colr.save()      
+
+
+            for q in age:
+               kids_age = ages.get(age=q)   
+               procs.age.set([kids_age])      
+            sp = sellers.get(seller=sell)                        
+            pks = procs.Sellers.create(seller=sp,Return=retu,dlvry_charges=deliv)
+
+            for i in rr:
+                v = int(request.POST.get(i+"_price"))
+                b = int(request.POST.get(i+"_mrp"))
+                n = int(request.POST.get(i+"_stock"))
+                if i == 'fs':
+                  i = 'Free Size'
+                s = Size.objects.create(sizes=i,price=v,mrp=b,stock=n)
+                s.save()
+                pks.size.add(s.id)
+                if i == speci:
+                   pks.specifications = s 
+                pks.save()    
+            br.save()          
+            produinfo.save()
+            procs.Sellers.add(pks.id)    
+            procs.save()
+            
+    context = {
+        'details':products,
+        'seller':sellers,
+        'ages':ages,
+        'brands':brands,
+        'colors':colors,
+    }        
+
+    return render(request,"seller.html",context)
+
 #When querying a ForeignKey field, you 'normally' pass an instance of the model
 #like this for example,
 # x = MenCategory.objects.get(men=proname) 

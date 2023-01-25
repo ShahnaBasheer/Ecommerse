@@ -86,9 +86,18 @@ ul.brand.dropdown-menu input {
 .homecategory{
 background-color: #DADBDD;  
 }
-.homepagecont{
-  margin-top:70px;
+
+.pagecontainer{
+  margin-top:60px;
 }
+footer{
+  display:none;
+  font-size: 16px;
+  background-image: linear-gradient(#993366,#660033);
+}
+
+/* LOGIN FORM MODEL */
+
 .loginform input:not([type=checkbox]){
    /*#993366*/
    border:none;
@@ -106,11 +115,17 @@ background-color: #DADBDD;
   background-image: linear-gradient(#993366,#660033);
   color:white;
 }
-footer{
-  display:none;
-  font-size: 16px;
-  background-image: linear-gradient(#993366,#660033);
+.submit{
+  /*background-color: #3162c4;*/
+  background: linear-gradient(to bottom, #336699 0%, #003366 100%);
+  color:white;
+  border:none;
 }
+.submit.btn:focus,.submit.btn:active:focus,.btn-check:focus+.btn{
+  box-shadow:none;
+}
+
+
 
 @media(max-width:662px){
   .navbar .container{
@@ -123,7 +138,7 @@ footer{
   .userlogin{display:none;} 
   .copyright{margin-bottom: 47px;}
   
-  .homepagecont{
+  .pagecontainer{
     margin-top:90px;
   }  
 }
@@ -150,7 +165,7 @@ footer{
 }
 .copyright{
   /*background-color: rgb(200, 81, 87);*/
-  background-color: #4670c4;
+  background-color: #a3386d;
   font-size: 14px;
   padding:10px 0px;
   color: white;

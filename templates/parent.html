@@ -79,6 +79,11 @@
               </a>
                <ul class="user dropdown-menu" aria-labelledby="dropdownMenu">
                {% if user.is_authenticated %}
+                 <li><a href="{% url 'user_profile' %}" class="dropdown-item"><span class="fs-6 fw-bold">
+                  Hi {{user.first_name}}, </span><br>
+                  <span class="text-secondary"><small>{{user.email}}</small></span>  
+               </a></li>
+                 <hr class="m-2">
                  <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
                {% else %}
                  <li><a class="dropdown-item" href="" data-bs-toggle="modal" 
@@ -104,14 +109,24 @@
             </a>
          </div>
       </nav>
-      <form action="" method="POST" id="login">
+      <form action="{% url 'login' %}" method="POST" id="login">
          {% csrf_token %}
          <div id="formdata">
            {% include 'login.html' %}
          </div>
       </form>
-      {% block categories %}
-      {% endblock %} 
+      <div class="pagecontainer">
+         {% for message in messages %}
+             <div class="alert alert-{{message.tags}} alert-dismissible mx-3 fade show p-1" role="alert">
+               <strong>{{ message }}</strong> 
+               <button type="button" class="btn-close p-2" data-bs-dismiss="alert" aria-label="Close"></button>
+             </div>
+         {% endfor %}
+
+         {% block categories %}
+         {% endblock %}
+      </div>
+      
 
       <div class="contactbottom">
         <div class="contact d-flex justify-content-evenly p-4">
