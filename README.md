@@ -1,1 +1,1 @@
-# Snapquick-ecommerse
+# Snapquick-ecommerce
