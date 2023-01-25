@@ -1,0 +1,21 @@
+#filt_accordion .accordion-button:not(.collapsed),.acc-buttons{
+  color:rgb(249, 249, 249);
+  /*background-image: linear-gradient(#993366,#660033);*/
+  background: linear-gradient(to bottom, #006699 0%, #004466 100%);
+}
+#filt_accordion .accordion-button{
+  padding:0.7rem 9.25rem;
+  background-color: #DADBDD;
+  font-size: 0.99rem;
+  font-weight: 600;  
+  /* #C7D3D4FF,#603F83FF,#CE4A7EFF,rgb(38, 190, 157), #CC6600,#DF6589FF */
+  margin:2px 0px;
+}
+
+#filt_accordion .accordion-body{
+  outline: 1px solid black;/* #004466*/
+  border-radius: 10px;
+  padding:1rem 1.15rem;
+  background-color: #ecf2f9;
+}
+
