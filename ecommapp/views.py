@@ -1,13 +1,10 @@
-
-from django.contrib.auth.hashers import make_password
 from django.template.loader import render_to_string
 from .forms import RegistrationForm
 from django.db.models import Count,F
 from django.db.models import Q
-from .models import Brand, CustomUser, EcomCart, EcomCartItem, KidsAge, ProductInfo, Seller, Seller_Product, SaveForLater, Size
+from .models import Brand, CustomUser, EcomCart, EcomCartItem, KidsAge, ProductInfo, Seller, SaveForLater, Size
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from . import import_fnctns as fncs
 from django.contrib import messages
 from django.template.loader import render_to_string
@@ -15,7 +12,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate,login,logout
 from ecommapp.models import AllFashion,Color
 
-from ecommapp import models
 # Create your views here.
 
 
@@ -105,8 +101,7 @@ def filter_kids(request):
 def product_info(request,slug):
     gotocart = p = selected_s = f = False
     products = AllFashion.objects.get(slug=slug)   
-    all_sizes =  AllFashion.objects.filter(slug=slug).values_list('Sellers__size__sizes',flat=True).\
-         exclude(Sellers__size__sizes='Free Size').distinct()
+    all_sizes =  products.all_available_sizes()
     q = products.Sellers.all()[0]
     seller_s = q.seller
     if 'sl' in request.GET:

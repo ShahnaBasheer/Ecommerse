@@ -12,10 +12,10 @@ products
 {% block categories %}
   <div class="mx-4 my-5 product-details">
     <div class="row">
-      <div class="col-5 py-3 px-5">
-         <img src="{{details.card_image.url}}" alt="images" style="max-width:100%;height:auto">
+      <div class="col-md-5 col-10 py-3 px-3 px-lg-5 mx-auto mx-lg-0">
+         <img src="{{details.card_image.url}}" class="img-fluid" alt="images">
       </div>
-      <div class="col-5 py-4">
+      <div class="col-xl-5 col-md-6 py-4">
         <div class="productinfo">
             <h6 class="brandinfo">{{details.brand}}</h6>
             <h6 class="pb-3 titlename">{{details.title}}</h6>

@@ -122,7 +122,13 @@ class AllFashion(models.Model):
    title = models.CharField(max_length=100)   
    brand = models.ForeignKey(Brand,on_delete=models.CASCADE,null=True,related_name="all_brands")   
    def get_absolute_url(self):
-        return reverse("product_info", kwargs={"slug": self.slug})
+      return reverse("product_info", kwargs={"slug": self.slug})
+   
+   def all_available_sizes(self):
+      allsizes =self.Sellers.values_list('size__sizes',flat=True).\
+              exclude(size__sizes='Free Size').distinct()
+      return allsizes
+
    def save(self, force_insert = False, force_update = True, using = False):
       if not self.slug:
             self.slug = slugify(self.title)

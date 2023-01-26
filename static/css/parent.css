@@ -86,7 +86,6 @@ ul.brand.dropdown-menu input {
 .homecategory{
 background-color: #DADBDD;  
 }
-
 .pagecontainer{
   margin-top:60px;
 }
@@ -165,8 +164,8 @@ footer{
 }
 .copyright{
   /*background-color: rgb(200, 81, 87);*/
-  background-color: #a3386d;
-  font-size: 14px;
+  background-color:#0077b3;
+  font-size: 12px;
   padding:10px 0px;
   color: white;
 }
@@ -191,5 +190,5 @@ footer{
   margin-bottom: 28px;
 }
 .contact p,.mail address{
-  font-size: 14.5px;
+  font-size: 12.5px;
 }
